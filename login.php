@@ -217,8 +217,8 @@
             <input type="hidden" name="_csrf_token" value="Eghk1pj3U4ua6OSUOf__YusBCVfEH7iTAuLCEuKwZYk">
             <button type="submit" class="btn btn-primary">Connexion</button>
             <div class="login-options">
-                <a href="register.html">Inscrivez-vous</a>
-                <a href="motdepasse.html">Mot de passe oublié</a>
+                <a href="register.php">Inscrivez-vous</a>
+                <a href="motdepasse.php">Mot de passe oublié</a>
             </div>
         </form>
     </div>
