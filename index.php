@@ -7,4 +7,16 @@ switch ($action) {
         $controller = new HomeController();
         $controller->index();
         break;
+    case 'paiement':
+    require_once('controllers/PaiementController.php');
+    $controller = new PaiementController();
+    $controller->index(); // <- ici on appelle index(), pas paiement_form()
+    break;
+
+case 'validerPaiement':
+    require_once('controllers/PaiementController.php');
+    $controller = new PaiementController();
+    $controller->validerPaiement();
+    break;
+
 }
