@@ -25,8 +25,8 @@
                 <li><a href="#">Contacts</a></li>
             </ul>
             <div class="user">
-                <a href="#" class="connect">Connexion</a>
-                <a href="#" class="inscript">Inscription</a>
+                <a href="login.php?action=login" class="connect">Connexion</a>
+                <a href="register.php?action=register" class="inscript">Inscription</a>
             </div>
         </nav>
         <nav class="nav n2">
