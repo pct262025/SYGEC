@@ -78,7 +78,7 @@
                     <input type="checkbox" class="form-check-input" id="remember">
                     <label class="form-check-label text-light" for="remember">Se souvenir de moi</label>
                 </div>
-                <a href="motdepasse.html">Mot de passe oublié ?</a>
+                <a href="motdepasse.php">Mot de passe oublié ?</a>
             </div>
             <button type="submit" class="btn btn-primary w-100">Se connecter</button>
         </form>
