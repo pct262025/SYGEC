@@ -1,152 +1,107 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Mot de passe oublié - Système de Gestion des Etats Civil</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mot de passe oublié</title>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
             margin: 0;
-            padding: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+            color: #e6edf3;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        header {
-            background-color: green;
-            color: white;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo-gauche, .logo-droite {
-            height: 60px;
-        }
-
-        header h1 {
-            font-size: 26px;
-            margin: 0;
+        .container {
             flex: 1;
-            text-align: center;
-        }
-
-        nav {
-            background-color: #eee;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            position: relative;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #005a87;
-            font-weight: bold;
-            position: relative;
-        }
-
-        nav a:hover {
-            text-decoration: underline;
-        }
-
-        .login-container {
-            display: flex;
-            justify-content: flex-end;
-            padding: 10px 20px;
-            background-color: #eee;
-        }
-
-        .login-button {
-            background-color: orange;
-            color: #005A87;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 16px;
-            display: inline-block;
-            transition: background-color 0.3s ease;
-        }
-
-        .login-button:hover {
-            background-color: darkorange;
-        }
-
-        .row {
             display: flex;
             justify-content: center;
             align-items: center;
-            flex: 1;
+            padding: 30px 10px;
         }
 
-        .col-md-4 {
+        .login-card {
+            background-color: #161b22;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
             width: 100%;
             max-width: 400px;
-            padding: 15px;
         }
 
-        .forgot-password-form-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .login-card h2 {
             text-align: center;
+            margin-bottom: 25px;
+            color: #0f0;
         }
 
         .form-group {
-            margin-bottom: 15px;
-            text-align: left;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            color: #005a87;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-weight: bold;
         }
 
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        button {
+        .form-control {
             width: 100%;
             padding: 10px;
-            background-color: orange;
-            color: white;
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            border-radius: 6px;
+            background-color: #0d1117;
+            color: #fff;
+            border: 1px solid #30363d;
         }
 
-        button:disabled {
-            background-color: #ccc;
+        .form-control:focus {
+            outline: none;
+            border-color: #0f0;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background-color: #0f0;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:disabled {
+            background-color: #444;
+            color: #999;
             cursor: not-allowed;
         }
 
-        button:hover:not(:disabled) {
-            background-color: darkorange;
+        .btn-primary:hover:enabled {
+            background-color: #0a0;
         }
 
         footer {
-            background-color: green;
-            color: white;
+            margin-top: 60px;
             padding: 30px 20px;
-            margin-top: auto;
+            background-color: #11141c;
+            color: #ccc;
+            font-size: 14px;
         }
 
         .footer-container {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             flex-wrap: wrap;
+            max-width: 1000px;
+            margin: auto;
         }
 
         .footer-section {
@@ -156,98 +111,60 @@
         }
 
         .footer-section h3 {
-            border-bottom: 2px solid white;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
+            color: #0f0;
+            margin-bottom: 15px;
         }
 
         .footer-section ul {
-            list-style: none;
+            list-style-type: none;
             padding: 0;
         }
 
-        .footer-section li {
+        .footer-section ul li {
             margin-bottom: 8px;
+            color: #bbb;
         }
     </style>
 </head>
+
 <body>
+    <div class="container">
+        <div class="login-card">
+            <h2>Mot de passe oublié</h2>
+            <form action="/mot-de-passe-oublie" method="post" id="formLogin">
+                <div class="form-group">
+                    <label for="email">Adresse email</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Entrez votre email"
+                        required />
+                </div>
 
-<header>
-    <img src="assets/img/logo_yakro.png" alt="Logo de la mairie" class="logo-gauche">
-    <h1>SYSTEME DE GESTION D'ETATS CIVIL - YAMOUSSOUKRO</h1>
-    <img src="assets/img/embleme_ci.png" alt="Image à droite" class="logo-droite">
-</header>
+                <div class="form-group">
+                    <label for="login">Nom d'utilisateur (login)</label>
+                    <input type="text" id="login" name="login" class="form-control" placeholder="Entrez votre login"
+                        required />
+                </div>
 
-<nav>
-    <a href="#">Demande d’acte</a>
-    <a href="#">Declaration d'acte</a>
-    <a href="#">Tarifs</a>
-    <a href="#">Contacts</a>
+                <div class="form-group">
+                    <div id="captcha"></div>
+                </div>
 
-    <div class="login-container">
-        <a href="login.html" class="login-button">
-            <i class="fas fa-arrow-right"></i> Se connecter
-        </a>
-    </div>
-</nav>
-
-<div class="row">
-    <div class="col-md-4">
-        <form action="/mot-de-passe-oublie" method="post" id="formLogin" class="forgot-password-form-container">
-            
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required="required"/>
-            </div>
-
-            <div class="form-group">
-                <label for="login">Login</label>
-                <input type="text" class="form-control" id="login" name="login" required="required"/>
-            </div>
-
-            <div class="form-group">
-                <div id="captcha"></div>
-            </div>
-
-            <button type="submit" id="btnConnexion" class="btn btn-primary" disabled="true">Valider</button>
-        </form>
-    </div>
-</div>
-
-<footer>
-    <div class="footer-container">
-        <div class="footer-section">
-            <h3>Services</h3>
-            <ul>
-                <li>Déclaration de naissance</li>
-                <li>Déclaration de mariage</li>
-                <li>Déclaration de décès</li>
-                <li>Demande d'actes</li>
-            </ul>
-        </div>
-        <div class="footer-section">
-            <h3>Contact</h3>
-            <ul>
-                <li>Téléphone : +225 01 23 45 67 89</li>
-                <li>Email : contact@etatcivil.ci</li>
-                <li>Adresse : Hôtel de Ville, Yakro, Côte d'Ivoire</li>
-            </ul>
+                <button type="submit" id="btnConnexion" class="btn-primary" disabled>Valider</button>
+            </form>
         </div>
     </div>
-</footer>
 
-<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
-<script>
-    var onloadCallback = function() {
-        grecaptcha.render('captcha', {
-            'sitekey': '6LdeRzUrAAAAAFO3zBB8RW6GQmGkolyU9lrwb7gz', 
-            'callback': function(response) {
-                document.getElementById('btnConnexion').disabled = false;
-            }
-        });
-    };
-</script>
-
+    < <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
+        </script>
+        <script>
+            var onloadCallback = function () {
+                grecaptcha.render('captcha', {
+                    'sitekey': '6LdeRzUrAAAAAFO3zBB8RW6GQmGkolyU9lrwb7gz',
+                    'callback': function (response) {
+                        document.getElementById('btnConnexion').disabled = false;
+                    }
+                });
+            };
+        </script>
 </body>
+
 </html>
