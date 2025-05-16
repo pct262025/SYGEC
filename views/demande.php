@@ -170,8 +170,10 @@
         if (value === "naissance") {
             document.getElementById("labeldoc").textContent = "Joindre une copie de l'extrait";
         } else if (value === "mariage") {
+            document.getElementById("labeldoc").textContent = "Joindre une copie de l'extrait d'acte de mariage";
             document.getElementById("mariageFields").classList.remove("hidden");
         } else if (value === "deces") {
+            document.getElementById("labeldoc").textContent = "Joindre une copie de l'extrait d'acte de décès";
             document.getElementById("decesFields").classList.remove("hidden");
         }
     });
