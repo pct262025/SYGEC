@@ -8,15 +8,27 @@ switch ($action) {
         $controller->index();
         break;
     case 'paiement':
-    require_once('controllers/PaiementController.php');
-    $controller = new PaiementController();
-    $controller->index(); // <- ici on appelle index(), pas paiement_form()
-    break;
+        require_once('controllers/PaiementController.php');
+        $controller = new PaiementController();
+        $controller->index(); // <- ici on appelle index(), pas paiement_form()
+        break;
 
-case 'validerPaiement':
-    require_once('controllers/PaiementController.php');
-    $controller = new PaiementController();
-    $controller->validerPaiement();
-    break;
+    case 'validerPaiement':
+        require_once('controllers/PaiementController.php');
+        $controller = new PaiementController();
+        $controller->validerPaiement();
+        break;
+
+    case 'login':
+        require_once('controllers/AuthentificationController.php');
+        $controller = new AuthentificationController();
+        $controller->login();
+        break;
+
+    case 'register':
+        require_once('controllers/AuthentificationController.php');
+        $controller = new AuthentificationController();
+        $controller->register();
+        break;
 
 }
