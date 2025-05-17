@@ -11,7 +11,9 @@
 
 <body>
 
-    <header class="header">
+    <?php require_once 'menu.php'; ?>
+
+    <!-- <header class="header">
         <nav class="nav n1">
             <div class="logo">
                 <img src="assets/img/logo.png" alt="">
@@ -51,7 +53,7 @@
                 </div>
             </div>
         </nav>
-    </header>
+    </header> -->
 
     <main class="main">
         <div class="head">
@@ -99,7 +101,7 @@
 
     </main>
 
-    <footer class="footer">
+    <!-- <footer class="footer">
         <div class="logo">
             <img src="assets/img/logo.png" alt="">
             <h4>Système de Gestion des Etats Civils de Yamoussoukro</h4>
@@ -118,7 +120,8 @@
         </div>
 
         <p class="copy">&copy; 2025 Plateforme État Civil. Tous droits réservés.</p>
-    </footer>
+    </footer> -->
+    <?php require_once 'footer.php'; ?>
 
 
 
