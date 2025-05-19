@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Système de Gestion des Etats Civils de Yamoussoukro </title>
+    <link rel="stylesheet" href="tdb.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#16a34a', // vert Tailwind
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+    <header class="header">
+        <nav class="nav n1">
+            <div class="logo">
+                <img src="logo_yakro.jpg" alt="">
+            </div>
+            <ul>
+                <li><a href="#">Accueil</a></li>
+                <li><a href="#">Demande d'Actes</a></li>
+                <li><a href="#">Declaration d'Actes</a></li>
+                <li><a href="#">Suivi</a></li>
+                <a href="index.php?action=paiement">Paiement</a>
+                <li><a href="#">Contacts</a></li>
+            </ul>
+            <div class="user">
+                <a href="#" class="connect">Connexion</a>
+                <a href="#" class="inscript">Inscription</a>
+            </div>
+        </nav>
+        <nav class="nav n2">
+            <div class="logo">
+                <img src="logo_yakro.jpg" alt="">
+            </div>
+
+            <div class="burger-menu">☰</div>
+
+            <div class="side-menu">
+                <ul class="nav-links">
+                    <li><a href="#">Accueil</a></li>
+                    <li><a href="#">Demande d'Actes</a></li>
+                    <li><a href="#">Declaration d'Actes</a></li>
+                    <li><a href="#">Suivi</a></li>
+                    <a href="index.php?action=paiement">Paiement</a>
+                    <li><a href="#">Contacts</a></li>
+                </ul>
+                <div class="user">
+                    <a href="#" class="connect">Connexion</a>
+                    <a href="#" class="inscript">Inscription</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- <main class="main">
+        <div class="head">
+            <div class="text">
+                <h1><span class="cl">Bienvenue</span> sur votre plateforme de gestion des états civils</h1>
+                <span class="com">COMMUNE DE YAMOUSSOUKRO</span>
+            </div>
+        </div> -->
+
+        <!-- <div class="etat-civil-container">
+            <i class="fas fa-id-card icon"></i>
+            <div class="title">Gérez vos démarches d’état civil en toute simplicité !</div>
+            <div class="text">
+                Déclarez une naissance, demandez un acte de mariage ou un extrait de décès…<br>
+                Faites tout ici, en ligne, rapidement et en toute sécurité.
+            </div>
+        </div> -->
+
+        <div class="cards-group">
+            <a href="">
+                <div class="card">
+                    <div class="title">Nombre d'acte de naissance déclaré </div>
+                    <!-- <i class="fas fa-clipboard icon"></i> -->
+                    <i class="fas fa-arrow-right arrow"></i>
+                </div>
+            </a>
+
+            <a href="">
+                <div class="card">
+                    <div class="title">Nbre de certificat de mariage déclaré</div>
+                    <!-- <i class="fas fa-tasks icon"></i> -->
+                    <i class="fas fa-arrow-right arrow"></i>
+                </div>
+            </a>
+
+            <a href="">
+                <div class="card">
+                    <div class="title">Demande de certificat de décés</div>
+                    <!-- <i class="fas fa-download icon"></i> -->
+                    <i class="fas fa-arrow-right arrow"></i>
+                </div>
+            </a>
+        </div>
+
+<!-- 
+        <body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+  <div class="max-w-7xl w-full"> -->
+    <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-10">📋 Tableau de Suivi des Actes Civils</h1>
+
+    <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+      <table class="min-w-full text-sm text-left text-gray-600">
+        <thead class="bg-primary text-white uppercase text-xs tracking-wider">
+          <tr>
+            <th class="px-6 py-4">Date de déclaration</th>
+            <th class="px-6 py-4">Type d’acte</th>
+            <th class="px-6 py-4">Nom</th>
+            <th class="px-6 py-4">Prénom</th>
+            <th class="px-6 py-4">Ville</th>
+            <th class="px-6 py-4">Statut</th>
+            <th class="px-6 py-4">Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4">02-02-2025</td>
+            <td class="px-6 py-4">Certificat de mariage</td>
+            <td class="px-6 py-4">Ousou</td>
+            <td class="px-6 py-4">Benedicte</td>
+            <td class="px-6 py-4">Abj</td>
+            <td class="px-6 py-4">
+              <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded">En attente</span>
+            </td>
+            <td class="px-6 py-4">
+              <a href="#" class="inline-flex items-center bg-primary text-white px-3 py-1.5 rounded hover:bg-green-700 transition">
+                📥 Télécharger
+              </a>
+            </td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4">02-03-2025</td>
+            <td class="px-6 py-4">Certificat de décès</td>
+            <td class="px-6 py-4">Koné</td>
+            <td class="px-6 py-4">Mille</td>
+            <td class="px-6 py-4">Abobo</td>
+            <td class="px-6 py-4">
+              <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Généré</span>
+            </td>
+            <td class="px-6 py-4">
+              <a href="#" class="inline-flex items-center bg-primary text-white px-3 py-1.5 rounded hover:bg-green-700 transition">
+                📥 Télécharger
+              </a>
+            </td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4">02-05-2025</td>
+            <td class="px-6 py-4">Acte de naissance</td>
+            <td class="px-6 py-4">Nidé</td>
+            <td class="px-6 py-4">Béatrice</td>
+            <td class="px-6 py-4">San Pedro</td>
+            <td class="px-6 py-4">
+              <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">Payé</span>
+            </td>
+            <td class="px-6 py-4">
+              <a href="#" class="inline-flex items-center bg-primary text-white px-3 py-1.5 rounded hover:bg-green-700 transition">
+                📥 Télécharger
+              </a>
+            </td>
+          </tr>
+          <!-- D’autres lignes peuvent être ajoutées ici -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+    </main>
+
+
+    <footer class="footer">
+        <div class="logo">
+            <img src="assets/img/logo.png" alt="">
+            <h4>Système de Gestion des Etats Civils de Yamoussoukro</h4>
+        </div>
+
+        <p class="desc">
+            Une plateforme simple et sécurisée pour toutes vos démarches d’état civil, accessible partout, à tout
+            moment.
+        </p>
+
+
+        <div class="links">
+            <a href="#">Mentions légales</a>
+            <a href="#">Politique de confidentialité</a>
+            <a href="#">Contact</a>
+        </div>
+
+        <p class="copy">&copy; 2025 Plateforme État Civil. Tous droits réservés.</p>
+    </footer>
+
+
+
+
+</body>
+<script>
+    const burger = document.querySelector('.burger-menu');
+    const nav = document.querySelector('.n2');
+
+    burger.addEventListener('click', () => {
+        nav.classList.toggle('open');
+
+        // Toggle the icon (☰ ↔ ✖)
+        if (nav.classList.contains('open')) {
+            burger.textContent = '✖';
+        } else {
+            burger.textContent = '☰';
+        }
+    });
+</script>
+</body>
+</html>
