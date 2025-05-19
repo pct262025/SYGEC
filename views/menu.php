@@ -6,7 +6,7 @@
             <img src="assets/img/logo.png" alt="">
         </div>
         <ul>
-            <li><a href="#">Acceuil</a></li>
+            <li><a class="accueil" href="#?action=accueil">Acceuil</a></li>
             <li><a href="#">Demande d'Actes</a></li>
             <li><a href="#">Declaration d'Actes</a></li>
             <li><a href="#">Suivi</a></li>
@@ -14,7 +14,7 @@
                 <a href="#?action=paiement" class="paiement">Paiement</a>
             </li>
             <li><a href="#">Contacts</a></li>
-            <li><a href="#?action=admin">Administration</a></li>
+            <li><a class="traiterDemande" href="#?action=traiterDemande">Administration</a></li>
         </ul>
         <div class="user">
             <a href="#?action=login" class="connect">Connexion</a>
@@ -77,6 +77,30 @@ document.querySelector('.paiement').addEventListener('click', function(event) {
     const params = new URLSearchParams(url.search);
     // Remplace ou ajoute 'action=login'
     params.set('action', 'paiement');
+    // Reconstruit l'URL avec les nouveaux paramètres
+    url.search = params.toString();
+    // Redirige vers la nouvelle URL
+    window.location.href = url.toString();
+});
+
+document.querySelector('.traiterDemande').addEventListener('click', function(event) {
+    event.preventDefault(); // Empêche la navigation immédiate
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    // Remplace ou ajoute 'action=login'
+    params.set('action', 'traiterDemande');
+    // Reconstruit l'URL avec les nouveaux paramètres
+    url.search = params.toString();
+    // Redirige vers la nouvelle URL
+    window.location.href = url.toString();
+});
+
+document.querySelector('.accueil').addEventListener('click', function(event) {
+    event.preventDefault(); // Empêche la navigation immédiate
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    // Remplace ou ajoute 'action=login'
+    params.set('action', 'accueil');
     // Reconstruit l'URL avec les nouveaux paramètres
     url.search = params.toString();
     // Redirige vers la nouvelle URL
