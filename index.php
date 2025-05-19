@@ -31,4 +31,10 @@ switch ($action) {
         $controller->register();
         break;
 
+    case 'traiterDemande':
+        require_once('controllers/AdminController.php');
+        $controller = new AdminController();
+        $controller->traiterDemande();
+        break;
+
 }
