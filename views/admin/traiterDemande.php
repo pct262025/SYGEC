@@ -1,4 +1,36 @@
 
+<?php 
+require_once 'models/DemandeActe.php';
+
+function redirectAfterDeleteParam ($param){
+     // Supprimer 'valider' du tableau $_GET
+    $params = $_GET;
+    unset($params[$param]);
+
+    // Reconstruire l'URL avec les autres paramètres
+    $query = http_build_query($params);
+    $url = strtok($_SERVER["REQUEST_URI"], '?');
+    $newUrl = $url . ($query ? "?$query" : "");
+
+    header("Location: $newUrl");
+    exit;
+}
+
+if ( isset($_GET['valider'])  ){
+    validerDemande($_GET['valider']);
+    
+    redirectAfterDeleteParam('valider');
+}
+if ( isset($_GET['annuler'])  ){
+    annulerDemande($_GET['annuler']);
+
+
+    redirectAfterDeleteParam('annuler');
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +49,6 @@
 
 <!-- start menu -->
 <?php 
-require_once 'models/DemandeActe.php';
 require_once 'views/menu.php'; 
 ?>
 <!-- end menu -->
@@ -110,8 +141,8 @@ if ( isset($_GET['id']) ) {
                 </div>
                 <div class="modal-footer">
                     <span type="button" class="btn btn-secondary ferme-modal" data-bs-dismiss="modal">Close</span>
-                    <span type="button" class="btn btn-danger">Annuler</span>
-                    <span type="button" class="btn btn-primary">Accepter</span>
+                    <span type="button" id="btn-annulation" <?php if ( isset($_GET["id"]) ){ echo "data-id=\"".$_GET["id"]."\""; } ?> class="btn btn-danger">Annuler</span>
+                    <span type="button" id="btn-validation" <?php if ( isset($_GET["id"]) ){ echo "data-id=\"".$_GET["id"]."\""; } ?> class="btn btn-primary">Accepter</span>
                 </div>
             </div>
 
@@ -279,13 +310,41 @@ if ( empty($all_demande_acte) ){
         function supprimerParam(parm){
                 const url = new URL(window.location.href);
                 url.searchParams.delete(parm);
-                window.location.href = url.toString(); // recharge la page avec le paramètre supprimé
+                return url;
         }
         Array.from( document.getElementsByClassName('ferme-modal') ).forEach (element => {
             element.addEventListener('click', function(event) {
-                supprimerParam("id");
+                const url = supprimerParam("id");
+                window.location.href = url.toString(); // recharge la page avec le paramètre supprimé
             });
         });
+
+        const buttonValidation = document.getElementById('btn-validation');
+        if ( buttonValidation != null ){
+            buttonValidation.addEventListener('click', function(event) {
+                const valider = this.getAttribute('data-id'); // récupère l'id dynamique
+                const url = supprimerParam("id");
+
+                const params = new URLSearchParams(url.search);
+                params.set('valider', valider); // définit le nouveau paramètre 'id'
+                url.search = params.toString();
+                window.location.href = url.toString(); // recharge la page 
+            });
+        }
+
+        const buttonAnnulation = document.getElementById('btn-annulation');
+        if ( buttonAnnulation != null ){
+            buttonAnnulation.addEventListener('click', function(event) {
+                const annuler = this.getAttribute('data-id'); // récupère l'id dynamique
+                const url = supprimerParam("id");
+
+                const params = new URLSearchParams(url.search);
+                params.set('annuler', annuler); // définit le nouveau paramètre 'id'
+                url.search = params.toString();
+                window.location.href = url.toString(); // recharge la page 
+            });
+        }
+        
 
     </script>
 
