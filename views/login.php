@@ -1,3 +1,47 @@
+
+<?php 
+
+session_start();
+// session_unset(); 
+// session_destroy();
+require_once 'models/Citoyen.php';
+
+if ( isset($_POST['login']) ){
+    $login = $_POST['login'];
+    $password = $_POST['password'];
+
+    // verifier que le login existe
+    $existingUser = findByLogin($login);
+    if ( $existingUser == null ){
+        // Gerer un message d'erreur ici
+        echo "<div class=\"popup\" id=\"popup\"> le login $login n'existe pas </div>";
+        $color  = "#f8d7da";
+        $textColor = "#721c24";
+    }
+    else{
+        if ( !password_verify($password, $existingUser['mot_de_passe']) ){
+            // Gerer un message d'erreur ici
+            echo "<div class=\"popup\" id=\"popup\"> login, mot de passe incorrecte </div>";
+            $color  = "#f8d7da";
+            $textColor = "#721c24";
+        }
+        else{
+            $_SESSION["id"] = $existingUser["id_citoyen"];
+            $_SESSION["nom"] = $existingUser["nom"];
+            $_SESSION["prenom"] = $existingUser["prenom"];
+
+            // Afficher le message de reussite
+            echo "<div class=\"popup\" id=\"popup\"> Félicitation, Vous êtes bien connectés. </div>";
+            $color  = "#d4edda";
+            $textColor = "#155724";
+
+            header("Refresh: 3; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=accueil");
+        }
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -57,6 +101,29 @@
         a:hover {
             text-decoration: underline;
         }
+        
+        /* start popup */
+        .popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: <?= $color ?>;
+            color: <?= $textColor ?>;
+            border: 1px solid <?= $textColor ?>;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            z-index: 9999;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; top: 0px; }
+            to { opacity: 1; top: 20px; }
+        }
+        /* end popup */
+
     </style>
 </head>
 
@@ -64,14 +131,14 @@
 
     <div class="login-card">
         <h2 class="text-center mb-4">Connexion</h2>
-        <form>
+        <form action="#" method="post">
             <div class="mb-3">
-                <label for="email" class="form-label">Login</label>
-                <input type="email" class="form-control" required>
+                <label for="login" class="form-label">Login</label>
+                <input type="login" name="login" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Mot de passe</label>
-                <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+                <input type="password" name="password" class="form-control" id="password" placeholder="••••••••" required>
             </div>
             <div class="mb-3 form-check d-flex justify-content-between">
                 <div>
@@ -97,6 +164,16 @@
             // Redirige vers la nouvelle URL
             window.location.href = url.toString();
         });
+
+        // start faire disparaitre le popup
+        setTimeout(function () {
+            const popup = document.getElementById('popup');
+            if ( popup != null ){
+                popup.style.opacity = '0';
+                setTimeout(() => popup.style.display = 'none', 500); // attend la transition
+            }
+        }, 3000);
+        // end faire disparaitre le popup
     </script>
 </body>
 
