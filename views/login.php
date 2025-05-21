@@ -82,9 +82,22 @@
             </div>
             <button type="submit" class="btn btn-primary w-100">Se connecter</button>
         </form>
-        <p class="mt-4 text-center">Pas encore de compte ? <a href="register.php">S'inscrire</a></p>
+        <p class="mt-4 text-center inscript">Pas encore de compte ? <a href="#">S'inscrire</a></p>
     </div>
 
+    <script>
+        document.querySelector('.inscript').addEventListener('click', function(event) {
+            event.preventDefault(); // Empêche la navigation immédiate
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            // Remplace ou ajoute 'action=login'
+            params.set('action', 'register');
+            // Reconstruit l'URL avec les nouveaux paramètres
+            url.search = params.toString();
+            // Redirige vers la nouvelle URL
+            window.location.href = url.toString();
+        });
+    </script>
 </body>
 
 </html>

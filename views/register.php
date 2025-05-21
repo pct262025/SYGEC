@@ -1,3 +1,41 @@
+
+<?php
+require_once 'models/Citoyen.php';
+
+if ( isset($_POST['nom']) ) { // Cela veut dire que le formulaire a été validé
+
+    $nom = $_POST['nom'];
+    $prenoms = isset($_POST['prenoms']) ? $_POST['prenoms'] : null;
+    $contact = isset($_POST['contact']) ? $_POST['contact'] : null;
+    $login = isset($_POST['login']) ? $_POST['login'] : null;
+    $motdepasse = isset($_POST['motdepasse']) ? password_hash( $_POST['motdepasse'] , PASSWORD_DEFAULT) : null;
+    $nationalite = isset($_POST['nationalite']) ? $_POST['nationalite'] : null;
+    $datenaissance = isset($_POST['datenaissance']) ? $_POST['datenaissance'] : null;
+    $email = isset($_POST['email']) ? $_POST['email'] : null;
+    $profession = isset($_POST['profession']) ? $_POST['profession'] : null;
+    
+    $existingUser = findByLogin($login);
+    if ( $existingUser != null ){
+        // Gerer un message d'erreur ici
+        echo "<div class=\"popup\" id=\"popup\"> le login $login existe déja </div>";
+        $color  = "#f8d7da";
+        $textColor = "#721c24";
+    }else{
+
+        save($nom, $prenoms, $contact, $login, $motdepasse, $nationalite, $datenaissance, $email, $profession);
+        echo "<div class=\"popup\" id=\"popup\"> Citoyen enregisté avec success </div>";
+        $color  = "#d4edda";
+        $textColor = "#155724";
+
+        header("Refresh: 3; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=accueil");
+    }
+    
+
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -83,14 +121,41 @@
         a:hover {
             text-decoration: underline;
         }
+
+        .mt-30{
+            margin-top: 30px;
+        }
+
+        /* start popup */
+        .popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: <?= $color ?>;
+            color: <?= $textColor ?>;
+            border: 1px solid <?= $textColor ?>;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            z-index: 9999;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; top: 0px; }
+            to { opacity: 1; top: 20px; }
+        }
+        /* end popup */
     </style>
 </head>
 
 <body>
 
-    <div class="login-card">
+    <div class="login-card mt-30">
         <h2>Créer un compte</h2>
-        <form method="post" action="inscription.php">
+        <form method="post" action="#">
+            <h4>Informations obligatoires</h4>
             <div class="form-group">
                 <label for="nom" class="form-label">Nom</label>
                 <input type="text" id="nom" name="nom" class="form-control" required>
@@ -102,10 +167,20 @@
             </div>
 
             <div class="form-group">
-                <label for="datenaissance" class="form-label">Date de naissance</label>
-                <input type="date" id="datenaissance" name="datenaissance" class="form-control" required>
+                <label for="contact" class="form-label">Contact</label>
+                <input type="number" id="contact" name="contact" class="form-control" placeholder=" +225 01233222" required>
             </div>
 
+            <div class="form-group">
+                <label for="email" class="form-label">Login</label>
+                <input type="text" id="login" name="login" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="motdepasse" class="form-label">Mot de passe</label>
+                <input type="password" id="motdepasse" name="motdepasse" class="form-control" required>
+            </div>
+            
 
             <div class="form-group">
                 <label for="nationalite" class="form-label">Nationalité</label>
@@ -365,31 +440,57 @@
 
             </div>
 
+            <br><hr><br>
+
+            <h4>Autres informations</h4>
+
             <div class="form-group">
-                <label for="contact" class="form-label">Contact</label>
-                <input type="number" id="contact" name="contact" class="form-control" placeholder=" +225 01233222"
-                    required>
+                <label for="datenaissance" class="form-label">Date de naissance</label>
+                <input type="date" id="datenaissance" name="datenaissance" class="form-control" >
             </div>
+
+            
             <div class="form-group">
-                <label for="Profession" class="form-label">Profession</label>
-                <input type="text" id="Profession" name="Profession" placeholder="Profession" class="form-control"
-                    required>
-            </div>
-            <div class="form-group">
-                <label for="email" class="form-label">Login</label>
-                <input type="email" id="email" name="email" class="form-control" required>
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-control" >
             </div>
 
             <div class="form-group">
-                <label for="motdepasse" class="form-label">Mot de passe</label>
-                <input type="password" id="motdepasse" name="motdepasse" class="form-control" required>
+                <label for="profession" class="form-label">Profession</label>
+                <input type="text" id="profession" name="profession" placeholder="profession" class="form-control"
+                    >
             </div>
 
             <button type="submit" class="btn-primary">S'inscrire</button> <br><br>
-            <p class="mt-4 text-center">Déjà un compte ? <a href="login.php">Se connecter</a></p>
+            <p class="mt-4 text-center connect">Déjà un compte ? <a href="#">Se connecter</a></p>
         </form>
     </div>
 
+
+
+    <script>
+        document.querySelector('.connect').addEventListener('click', function(event) {
+            event.preventDefault(); // Empêche la navigation immédiate
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            // Remplace ou ajoute 'action=login'
+            params.set('action', 'login');
+            // Reconstruit l'URL avec les nouveaux paramètres
+            url.search = params.toString();
+            // Redirige vers la nouvelle URL
+            window.location.href = url.toString();
+        });
+        
+        // start faire disparaitre le popup
+        setTimeout(function () {
+            const popup = document.getElementById('popup');
+            if ( popup != null ){
+                popup.style.opacity = '0';
+                setTimeout(() => popup.style.display = 'none', 500); // attend la transition
+            }
+        }, 3000);
+        // end faire disparaitre le popup
+    </script>
 </body>
 
 </html>

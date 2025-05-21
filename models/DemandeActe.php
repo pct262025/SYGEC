@@ -65,4 +65,24 @@ function demandeAttenteValidation ($id){
 
 }
 
+function validerDemande($id){
+
+    $sql = "update demande_acte set statut = 'En attente de paiement' where id_demande = :id_demande";
+
+    $stmt = Database::getConnection()->prepare($sql);
+    $stmt->bindParam(':id_demande', $id);
+    $stmt->execute();
+    return $stmt->fetch();
+}
+
+function annulerDemande($id){
+
+    $sql = "update demande_acte set statut = 'Annuler' where id_demande = :id_demande";
+
+    $stmt = Database::getConnection()->prepare($sql);
+    $stmt->bindParam(':id_demande', $id);
+    $stmt->execute();
+    return $stmt->fetch();
+}
+
 ?>
