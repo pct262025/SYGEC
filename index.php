@@ -43,4 +43,10 @@ switch ($action) {
         $controller->cerificat();
         break;
 
+    case 'suivi':
+        require_once('controllers/SuiviController.php');
+        $controller = new SuiviController();
+        $controller->suivi();
+        break;
+
 }
