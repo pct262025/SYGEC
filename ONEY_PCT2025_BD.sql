@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
 --
--- Host: localhost    Database: PCT2025
+-- Host: localhost    Database: etat_civil_ci
 -- ------------------------------------------------------
 -- Server version	5.5.5-10.4.28-MariaDB
 
@@ -26,27 +26,30 @@ CREATE TABLE `citoyen` (
   `id_citoyen` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) DEFAULT NULL,
   `prenom` varchar(255) DEFAULT NULL,
+  `lieu_naissance` varchar(255) DEFAULT NULL,
   `date_naissance` datetime DEFAULT NULL,
   `heure_naissance` time DEFAULT NULL,
-  `telephone` varchar(50) DEFAULT NULL,
+  `contact` varchar(50) DEFAULT NULL,
   `login` varchar(255) DEFAULT NULL,
   `mot_de_passe` varchar(255) DEFAULT NULL,
+  `nationalite` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `profession` varchar(100) DEFAULT NULL,
   `numero_registre` varchar(255) DEFAULT NULL,
-  `id_citoyen_pere` int(11) DEFAULT NULL,
-  `id_citoyen_mere` int(11) DEFAULT NULL,
-  `id_citoyen_tuteur` int(11) DEFAULT NULL,
+  `login_citoyen_pere` varchar(255) DEFAULT NULL,
+  `login_citoyen_mere` varchar(255) DEFAULT NULL,
+  `login_citoyen_tuteur` varchar(255) DEFAULT NULL,
   `id_fonction` int(11) DEFAULT NULL,
+  `marie_a` varchar(255) DEFAULT NULL,
+  `marie_avec` varchar(255) DEFAULT NULL,
+  `marie_le` datetime DEFAULT NULL,
+  `divorce_le` datetime DEFAULT NULL,
+  `deces_a` varchar(255) DEFAULT NULL,
+  `deces_le` datetime DEFAULT NULL,
   PRIMARY KEY (`id_citoyen`),
-  KEY `citoyen_citoyen_FK` (`id_citoyen_pere`),
-  KEY `citoyen_citoyen_FK_1` (`id_citoyen_mere`),
-  KEY `citoyen_citoyen_FK_2` (`id_citoyen_tuteur`),
   KEY `citoyen_fonction_FK` (`id_fonction`),
-  CONSTRAINT `citoyen_citoyen_FK` FOREIGN KEY (`id_citoyen_pere`) REFERENCES `citoyen` (`id_citoyen`),
-  CONSTRAINT `citoyen_citoyen_FK_1` FOREIGN KEY (`id_citoyen_mere`) REFERENCES `citoyen` (`id_citoyen`),
-  CONSTRAINT `citoyen_citoyen_FK_2` FOREIGN KEY (`id_citoyen_tuteur`) REFERENCES `citoyen` (`id_citoyen`),
-  CONSTRAINT `citoyen_citoyen_FK_3` FOREIGN KEY (`id_fonction`) REFERENCES `citoyen` (`id_citoyen`),
   CONSTRAINT `citoyen_fonction_FK` FOREIGN KEY (`id_fonction`) REFERENCES `fonction` (`id_fonction`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -55,6 +58,7 @@ CREATE TABLE `citoyen` (
 
 LOCK TABLES `citoyen` WRITE;
 /*!40000 ALTER TABLE `citoyen` DISABLE KEYS */;
+INSERT INTO `citoyen` VALUES (1,'Namane','Sous délégué','Bouake','2000-01-01 06:00:00','06:00:00','0142204346','nam','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'Aymar','Dynamique Codeur','Yakro','2000-01-01 06:00:00','06:00:00','0142204346','Aym','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'Hermane','Délégué très très fort','Yamoussoukro','2000-01-01 06:00:00','06:00:00','0142204346','Her','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,'Désiré','Dynamique codeuse','Abidjan','2000-01-01 06:00:00','06:00:00','0142204346','Des','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,'Jacob','Extraordinaire Front-end','Adjake','2000-01-01 06:00:00','06:00:00','0142204346','Jac','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,'Emi','Dynamique admin bd','Adjake','2000-01-01 06:00:00','06:00:00','0142204346','Emi','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `citoyen` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,7 +87,7 @@ CREATE TABLE `demande_acte` (
   CONSTRAINT `demande_acte_sous_prefecture_FK` FOREIGN KEY (`id_sous_prefecture`) REFERENCES `sous_prefecture` (`id_sous_prefecture`),
   CONSTRAINT `demande_acte_type_acte_FK` FOREIGN KEY (`id_type_acte`) REFERENCES `type_acte` (`id_type_acte`),
   CONSTRAINT `demande_acte_utilisateur_FK` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,6 +96,7 @@ CREATE TABLE `demande_acte` (
 
 LOCK TABLES `demande_acte` WRITE;
 /*!40000 ALTER TABLE `demande_acte` DISABLE KEYS */;
+INSERT INTO `demande_acte` VALUES (1,'En attente de validation',NULL,'2025-05-18 00:00:00',1,NULL,1,NULL),(2,'En attente de validation',NULL,'2025-05-18 00:00:00',1,NULL,2,NULL),(3,'En attente de validation',NULL,'2025-05-18 00:00:00',1,NULL,3,NULL),(4,'En attente de validation',NULL,'2025-05-18 00:00:00',1,NULL,4,NULL),(5,'En attente de validation',NULL,'2025-05-18 00:00:00',2,NULL,5,NULL),(6,'En attente de validation',NULL,'2025-05-18 00:00:00',2,NULL,6,NULL);
 /*!40000 ALTER TABLE `demande_acte` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -258,7 +263,7 @@ CREATE TABLE `type_acte` (
   `id_type_acte` int(11) NOT NULL AUTO_INCREMENT,
   `libele` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_type_acte`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -267,6 +272,7 @@ CREATE TABLE `type_acte` (
 
 LOCK TABLES `type_acte` WRITE;
 /*!40000 ALTER TABLE `type_acte` DISABLE KEYS */;
+INSERT INTO `type_acte` VALUES (1,'Acte de naissance'),(2,'Certificat de nationnalité');
 /*!40000 ALTER TABLE `type_acte` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -328,7 +334,7 @@ LOCK TABLES `utilisateur_role` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping routines for database 'PCT2025'
+-- Dumping routines for database 'etat_civil_ci'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -340,4 +346,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-28 15:02:09
+-- Dump completed on 2025-05-22  1:18:44
