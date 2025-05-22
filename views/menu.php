@@ -9,7 +9,7 @@
             <li><a class="accueil" href="#?action=accueil">Acceuil</a></li>
             <li><a href="#">Demande d'Actes</a></li>
             <li><a href="#">Declaration d'Actes</a></li>
-            <li><a href="#">Suivi</a></li>
+            <li><a href="#" class="suivi">Suivi</a></li>
             <li>
                 <a href="#?action=paiement" class="paiement">Paiement</a>
             </li>
@@ -101,6 +101,18 @@ document.querySelector('.accueil').addEventListener('click', function(event) {
     const params = new URLSearchParams(url.search);
     // Remplace ou ajoute 'action=login'
     params.set('action', 'accueil');
+    // Reconstruit l'URL avec les nouveaux paramètres
+    url.search = params.toString();
+    // Redirige vers la nouvelle URL
+    window.location.href = url.toString();
+});
+
+document.querySelector('.suivi').addEventListener('click', function(event) {
+    event.preventDefault(); // Empêche la navigation immédiate
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    // Remplace ou ajoute 'action=login'
+    params.set('action', 'suivi');
     // Reconstruit l'URL avec les nouveaux paramètres
     url.search = params.toString();
     // Redirige vers la nouvelle URL

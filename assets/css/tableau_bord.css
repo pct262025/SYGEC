@@ -1,0 +1,151 @@
+.cards-group {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  flex-wrap: wrap;
+  margin: 4rem 0 6rem;
+
+  a {
+    text-decoration: none;
+  }
+
+  .card {
+    background-color: #ffffff;
+    width: 300px;
+    height: 300px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    & .title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    & .icon {
+      font-size: 4rem;
+      color: green;
+      margin-top: 1.5rem;
+    }
+
+    & .arrow {
+      font-size: 1.8rem;
+      color: #999;
+      margin-top: 2rem;
+    }
+
+    &:hover .icon {
+      transform: scale(1.1);
+    }
+
+    & .arrow {
+      font-size: 1.8rem;
+      color: #999;
+      margin-top: 2rem;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover .arrow {
+      transform: translateX(6px);
+      color: #0d6efd;
+    }
+  }
+}
+
+.etat-civil-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  .icon {
+    font-size: 60px;
+    color: green;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .text {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: #555;
+    margin-bottom: 20px;
+  }
+}
+
+/* Main Content */
+.main-content {
+    padding: 40px 0;
+}
+
+.page-title {
+    text-align: center;
+    color: #333;
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    font-weight: 700; /* Bolder for titles */
+}
+
+.intro-text {
+    text-align: center;
+    color: #666;
+    font-size: 1.1em;
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+}
+
+.contact-section {
+    display: flex;
+    justify-content: center; /* Center the cards if they don't fill the width */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 30px; /* Space between the cards */
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    padding: 30px;
+    flex: 1; /* Allow cards to grow */
+    min-width: 300px; /* Minimum width before wrapping */
+    max-width: 500px; /* Max width for individual cards */
+}
+
+
+.border-top-left-radius-10{
+  border-top-left-radius: 10px;
+}
+
+.border-top-right-radius-10{
+  border-top-right-radius: 10px;
+}
+
+.border-radius{
+  border-radius: 10px;
+}
+
+.overflow-hidden{
+  overflow: hidden;
+}
+
+.wi{
+  width: 99.95%;
+}
