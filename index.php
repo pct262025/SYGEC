@@ -37,4 +37,10 @@ switch ($action) {
         $controller->traiterDemande();
         break;
 
+    case 'cerificat':
+        require_once('controllers/AdminController.php');
+        $controller = new AdminController();
+        $controller->cerificat();
+        break;
+
 }
