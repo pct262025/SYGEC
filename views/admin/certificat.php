@@ -58,8 +58,8 @@ require_once 'views/menu.php';
 <?php 
 
 if ( isset($_GET['id']) ) { 
-    $info_demande = demandeAttenteValidation($_GET['id']);
-    if ( $info_demande != null ){
+    $info_certificat = certificatAttenteValidation($_GET['id']);
+    if ( $info_certificat != null ){
 ?>
 <div class=" rgba-dark-25 top-0 width-100_pc min-height-100vh position-fixed z-index-10 ">
     
@@ -80,59 +80,59 @@ if ( isset($_GET['id']) ) {
                         <tbody>
                             <tr>
                                 <td class="col">Nom</th>
-                                <td class="col"> <?php echo $info_demande['nom'] != null ? $info_demande['nom'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['nom'] != null ? $info_certificat['nom'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Prénom</th>
-                                <td class="col"> <?php echo $info_demande['prenom'] != null ? $info_demande['prenom'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['prenom'] != null ? $info_certificat['prenom'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Date de naissance</th>
-                                <td class="col"> <?php echo $info_demande['date_naissance'] != null ? $info_demande['date_naissance'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['date_naissance'] != null ? $info_certificat['date_naissance'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Lieu de naissance</th>
-                                <td class="col"> <?php echo $info_demande['lieu_naissance'] != null ? $info_demande['lieu_naissance'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['lieu_naissance'] != null ? $info_certificat['lieu_naissance'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Nom du père</th>
-                                <td class="col"> <?php echo $info_demande['nom_pere'] != null ? $info_demande['nom_pere'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['nom_pere'] != null ? $info_certificat['nom_pere'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Prenom du père</th>
-                                <td class="col"> <?php echo $info_demande['prenom_pere'] != null ? $info_demande['prenom_pere'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['prenom_pere'] != null ? $info_certificat['prenom_pere'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Nom de la mère</th>
-                                <td class="col"> <?php echo $info_demande['nom_mere'] != null ? $info_demande['nom_mere'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['nom_mere'] != null ? $info_certificat['nom_mere'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Prenom de la mère</th>
-                                <td class="col"> <?php echo $info_demande['prenom_mere'] != null ? $info_demande['prenom_mere'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['prenom_mere'] != null ? $info_certificat['prenom_mere'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Marié le </th>
-                                <td class="col"> <?php echo $info_demande['marie_le'] != null ? $info_demande['marie_le'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['marie_le'] != null ? $info_certificat['marie_le'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Marié à </th>
-                                <td class="col"> <?php echo $info_demande['marie_a'] != null ? $info_demande['marie_a'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['marie_a'] != null ? $info_certificat['marie_a'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Marié avec </th>
-                                <td class="col"> <?php echo $info_demande['marie_avec'] != null ? $info_demande['marie_avec'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['marie_avec'] != null ? $info_certificat['marie_avec'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Mariage dissous avec decision de divorce en date du</th>
-                                <td class="col"> <?php echo $info_demande['divorce_le'] != null ? $info_demande['divorce_le'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['divorce_le'] != null ? $info_certificat['divorce_le'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Décès le</th>
-                                <td class="col"> <?php echo $info_demande['deces_le'] != null ? $info_demande['deces_le'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['deces_le'] != null ? $info_certificat['deces_le'] : '---Neant---' ; ?> </td>
                             </tr>
                             <tr>
                                 <td class="col">Décès à</th>
-                                <td class="col"> <?php echo $info_demande['deces_a'] != null ? $info_demande['deces_a'] : '---Neant---' ; ?> </td>
+                                <td class="col"> <?php echo $info_certificat['deces_a'] != null ? $info_certificat['deces_a'] : '---Neant---' ; ?> </td>
                             </tr>
                         </tbody>
 
@@ -165,8 +165,8 @@ if ( isset($_GET['id']) ) {
                 <div id="demandes" class="fw-bold menu-principal col-12 menu-item ">
                     <span id="demandes-toggle-icon" class="icon">−</span> Gestion des demandes
                 </div>
-                <a href="#?action=traiterDemande" id="demandes-menu-actes-naissance" class="col-11 offset-1 menu-item orange annuler-text-decoration annuler-heritage-color-hover acte-naissance">Actes de naissance</a>
-                <a href="#" id="demandes-menu-certification-nationalite" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover certificat">Certificat de Nationalité</a>
+                <a href="#?action=traiterDemande" id="demandes-menu-actes-naissance" class="col-11 offset-1 text-dark menu-item orange annuler-text-decoration annuler-heritage-color-hover acte-naissance">Actes de naissance</a>
+                <a href="#" id="demandes-menu-certification-nationalite" class="col-11 offset-1 menu-item orange annuler-text-decoration annuler-heritage-color-hover certificat">Certificat de Nationalité</a>
             </div>
             <div class="row">
                 <div id="users" class="fw-bold menu-principal col-12 menu-item ">
@@ -186,15 +186,16 @@ if ( isset($_GET['id']) ) {
                 <div class="col-11">
 
 <?php 
-$all_demande_acte = listDemandeAttenteValidation();
-if ( empty($all_demande_acte) ){
+$all_certificat = listCertificatAttenteValidation();
+if ( empty($all_certificat) ){ 
 ?>
     <div class="row">
         <div class="col-8 offset-2">
             <img class="img-fluid" src="assets/img/marquer_liste_vide.png" alt="liste_vide">
         </div>
     </div>
-<?php
+            
+<?php 
 }else{
     
 ?>
@@ -210,17 +211,17 @@ if ( empty($all_demande_acte) ){
                             </tr>
                         </thead>
                         <tbody>
-<?php foreach($all_demande_acte as $demande_acte){
+<?php foreach($all_certificat as $certificat){
         
      ?>
                             <tr>
-                                <td class="col-2"> <?php echo $demande_acte['id_demande'] != null ? $demande_acte['id_demande'] : '---Néant---'; ?> </th>
-                                <td class="col"> <?php echo $demande_acte['nom'] != null ? $demande_acte['nom'] : '---Néant---'; ?> </td>
-                                <td class="col"> <?php echo $demande_acte['prenom'] != null ? $demande_acte['prenom'] : '---Néant---'; ?> </td>
-                                <td class="col"> <?php echo $demande_acte['statut'] != null ? $demande_acte['statut'] : '---Néant---'; ?> </td>
+                                <td class="col-2"> <?php echo $certificat['id_demande'] != null ? $certificat['id_demande'] : '---Néant---'; ?> </th>
+                                <td class="col"> <?php echo $certificat['nom'] != null ? $certificat['nom'] : '---Néant---'; ?> </td>
+                                <td class="col"> <?php echo $certificat['prenom'] != null ? $certificat['prenom'] : '---Néant---'; ?> </td>
+                                <td class="col"> <?php echo $certificat['statut'] != null ? $certificat['statut'] : '---Néant---'; ?> </td>
                                 <td class="col-1 justify-content-center "> 
                                     <div class="d-flex justify-content-center">
-                                        <a class="one-acte-naissance" href="#" data-id="<?php echo $demande_acte['id_demande']; ?>">
+                                        <a class="one-certificat" href="#" data-id="<?php echo $certificat['id_demande']; ?>">
                                             <span class="btn btn-danger">
                                                 Action
                                             </span>
@@ -314,7 +315,7 @@ if ( empty($all_demande_acte) ){
             window.location.href = url.toString();
         });
 
-        Array.from( document.getElementsByClassName('one-acte-naissance') ).forEach (element => {
+        Array.from( document.getElementsByClassName('one-certificat') ).forEach (element => {
             element.addEventListener('click', function(event) {
                 const id = this.getAttribute('data-id'); // récupère l'id dynamique
                 const url = new URL(window.location.href);
