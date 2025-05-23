@@ -9,6 +9,10 @@ class AuthentificationController{
     public function register(){
         require_once 'views/register.php';
     }
+
+    public function deconnexion(){
+        require_once 'views/deconnexion.php';
+    }
 }
 
 ?>
