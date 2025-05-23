@@ -155,4 +155,20 @@ function certificatAttenteValidation ($id){
 
 }
 
+
+
+function creerUneDemande ($statut, $id_type_acte, $id_citoyen){
+
+    $sql = "INSERT INTO etat_civil_ci.demande_acte
+            (statut, date_demande, id_type_acte, id_citoyen)
+            VALUES(:statut, now(), :id_type_acte, :id_citoyen);";
+
+    $stmt = Database::getConnection()->prepare($sql);
+    $stmt->bindParam(':statut', $statut);
+    $stmt->bindParam(':id_type_acte', $id_type_acte);
+    $stmt->bindParam(':id_citoyen', $id_citoyen);
+    $stmt->execute();
+
+}
+
 ?>

@@ -46,10 +46,23 @@ CREATE TABLE `citoyen` (
   `divorce_le` datetime DEFAULT NULL,
   `deces_a` varchar(255) DEFAULT NULL,
   `deces_le` datetime DEFAULT NULL,
+  `nom_pere` varchar(255) DEFAULT NULL,
+  `prenom_pere` varchar(255) DEFAULT NULL,
+  `proffession_pere` varchar(255) DEFAULT NULL,
+  `nom_mere` varchar(255) DEFAULT NULL,
+  `prenom_mere` varchar(255) DEFAULT NULL,
+  `proffession_mere` varchar(255) DEFAULT NULL,
+  `nom_conjoint` varchar(255) DEFAULT NULL,
+  `prenom_conjoint` varchar(255) DEFAULT NULL,
+  `lieu_habitation` varchar(255) DEFAULT NULL,
+  `date_naissance_pere` datetime DEFAULT NULL,
+  `date_naissance_mere` datetime DEFAULT NULL,
+  `lieu_naissance_mere` varchar(255) DEFAULT NULL,
+  `lieu_naissance_pere` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_citoyen`),
   KEY `citoyen_fonction_FK` (`id_fonction`),
   CONSTRAINT `citoyen_fonction_FK` FOREIGN KEY (`id_fonction`) REFERENCES `fonction` (`id_fonction`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -58,7 +71,6 @@ CREATE TABLE `citoyen` (
 
 LOCK TABLES `citoyen` WRITE;
 /*!40000 ALTER TABLE `citoyen` DISABLE KEYS */;
-INSERT INTO `citoyen` VALUES (1,'Namane','Sous délégué','Bouake','2000-01-01 06:00:00','06:00:00','0142204346','nam','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'Aymar','Dynamique Codeur','Yakro','2000-01-01 06:00:00','06:00:00','0142204346','Aym','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,'Hermane','Délégué très très fort','Yamoussoukro','2000-01-01 06:00:00','06:00:00','0142204346','Her','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,'Désiré','Dynamique codeuse','Abidjan','2000-01-01 06:00:00','06:00:00','0142204346','Des','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,'Jacob','Extraordinaire Front-end','Adjake','2000-01-01 06:00:00','06:00:00','0142204346','Jac','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,'Emi','Dynamique admin bd','Adjake','2000-01-01 06:00:00','06:00:00','0142204346','Emi','1234',NULL,NULL,NULL,'num',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `citoyen` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,7 +99,7 @@ CREATE TABLE `demande_acte` (
   CONSTRAINT `demande_acte_sous_prefecture_FK` FOREIGN KEY (`id_sous_prefecture`) REFERENCES `sous_prefecture` (`id_sous_prefecture`),
   CONSTRAINT `demande_acte_type_acte_FK` FOREIGN KEY (`id_type_acte`) REFERENCES `type_acte` (`id_type_acte`),
   CONSTRAINT `demande_acte_utilisateur_FK` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,7 +108,6 @@ CREATE TABLE `demande_acte` (
 
 LOCK TABLES `demande_acte` WRITE;
 /*!40000 ALTER TABLE `demande_acte` DISABLE KEYS */;
-INSERT INTO `demande_acte` VALUES (1,'En attente de validation',NULL,'2025-05-18 00:00:00',1,NULL,1,NULL),(2,'En attente de validation',NULL,'2025-05-18 00:00:00',1,NULL,2,NULL),(3,'En attente de validation',NULL,'2025-05-18 00:00:00',1,NULL,3,NULL),(4,'En attente de validation',NULL,'2025-05-18 00:00:00',1,NULL,4,NULL),(5,'En attente de validation',NULL,'2025-05-18 00:00:00',2,NULL,5,NULL),(6,'En attente de validation',NULL,'2025-05-18 00:00:00',2,NULL,6,NULL);
 /*!40000 ALTER TABLE `demande_acte` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -346,4 +357,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-22  1:18:44
+-- Dump completed on 2025-05-23  3:45:40
