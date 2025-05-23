@@ -49,4 +49,10 @@ switch ($action) {
         $controller->suivi();
         break;
 
+    case 'demande':
+        require_once('controllers/DemandeController.php');
+        $controller = new DemandeController();
+        $controller->demande();
+        break;
+
 }
