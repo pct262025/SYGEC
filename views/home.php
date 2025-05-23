@@ -78,7 +78,7 @@ session_start();
         </div>
 
         <div class="cards-group">
-            <a href="">
+            <a href="" class="demande2">
                 <div class="card">
                     <div class="title">Faites une demande</div>
                     <i class="fas fa-clipboard icon"></i>
@@ -86,7 +86,7 @@ session_start();
                 </div>
             </a>
 
-            <a href="">
+            <a href="" class="suivi2">
                 <div class="card">
                     <div class="title">Suivez votre demande </div>
                     <i class="fas fa-tasks icon"></i>
@@ -94,7 +94,7 @@ session_start();
                 </div>
             </a>
 
-            <a href="">
+            <a href="" class="suivi2">
                 <div class="card">
                     <div class="title">Télécharger votre acte civil</div>
                     <i class="fas fa-download icon"></i>
@@ -146,6 +146,37 @@ session_start();
             burger.textContent = '☰';
         }
     });
+
+    
+
+    document.querySelector('.demande2').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche la navigation immédiate
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        // Remplace ou ajoute 'action=login'
+        params.set('action', 'demande');
+        // Reconstruit l'URL avec les nouveaux paramètres
+        url.search = params.toString();
+        // Redirige vers la nouvelle URL
+        window.location.href = url.toString();
+    });
+    
+    const suivies_items = document.querySelectorAll('.suivi2');
+    suivies_items.forEach((element) => {
+        element.addEventListener('click', function(event) {
+            event.preventDefault(); // Empêche la navigation immédiate
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            // Remplace ou ajoute 'action=login'
+            params.set('action', 'suivi');
+            // Reconstruit l'URL avec les nouveaux paramètres
+            url.search = params.toString();
+            // Redirige vers la nouvelle URL
+            window.location.href = url.toString();
+        });
+    });
+
+    
 </script>
 
 </html>

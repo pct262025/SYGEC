@@ -31,6 +31,12 @@ switch ($action) {
         $controller->register();
         break;
 
+    case 'deconnexion':
+        require_once('controllers/AuthentificationController.php');
+        $controller = new AuthentificationController();
+        $controller->deconnexion();
+        break;
+
     case 'traiterDemande':
         require_once('controllers/AdminController.php');
         $controller = new AdminController();

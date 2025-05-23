@@ -1,3 +1,14 @@
+<?php 
+session_start();
+
+// start si l'utilisateur n'est pas connecté, on le redirige vers la connexions
+if ( !isset($_SESSION["id"]) ){
+    header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=login");
+}
+// start si l'utilisateur n'est pas connecté, on le redirige vers la connexions
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <html lang="en">

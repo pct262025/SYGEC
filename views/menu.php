@@ -5,10 +5,11 @@
         <div class="logo">
             <img src="assets/img/logo.png" alt="">
         </div>
+
         <ul>
             <li><a class="accueil" href="#?action=accueil">Acceuil</a></li>
             <li><a href="#" class="demande">Demande d'Actes</a></li>
-            <li><a href="#">Declaration d'Actes</a></li>
+            <!-- <li><a href="#">Declaration d'Actes</a></li> -->
             <li><a href="#" class="suivi">Suivi</a></li>
             <li>
                 <a href="#?action=paiement" class="paiement">Paiement</a>
@@ -17,8 +18,22 @@
             <li><a class="traiterDemande" href="#?action=traiterDemande">Administration</a></li>
         </ul>
         <div class="user">
-            <a href="#?action=login" class="connect">Connexion</a>
-            <a href="#?action=register" class="inscript">Inscription</a>
+<?php  ?> 
+<?php
+if ( isset($_SESSION['nom']) ){
+    echo $_SESSION['nom']." ".$_SESSION['prenom']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+}
+    if ( isset($_SESSION["id"]) ){
+?> 
+                <a href="#" class="deconnexion">Deconnexion</a>
+<?php
+    }else{
+?>
+                <a href="#" class="connect">Connexion</a>
+                <a href="#" class="inscript">Inscription</a>
+<?php
+    }
+?>
         </div>
     </nav>
     <nav class="nav n2">
@@ -32,44 +47,60 @@
             <ul class="nav-links">
                 <li><a href="#">Acceuil</a></li>
                 <li><a href="#">Demande d'Actes</a></li>
-                <li><a href="#">Declaration d'Actes</a></li>
+                <!-- <li><a href="#">Declaration d'Actes</a></li> -->
                 <li><a href="#">Suivi</a></li>
                 <a href="index.php?action=paiement">Paiement</a>
                 <li><a href="#">Contacts</a></li>
                 <li><a href="#">Administration</a></li>
             </ul>
             <div class="user">
+<?php  ?> 
+<?php
+    if ( isset($_SESSION["id"]) ){
+?> 
+                <a href="#" class="deconnexion">Inscription</a>
+<?php
+    }else{
+?>
                 <a href="#" class="connect">Connexion</a>
                 <a href="#" class="inscript">Inscription</a>
+<?php
+    }
+?>
             </div>
         </div>
     </nav>
 </header>
 
 <script>
-document.querySelector('.connect').addEventListener('click', function(event) {
-    event.preventDefault(); // Empêche la navigation immédiate
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    // Remplace ou ajoute 'action=login'
-    params.set('action', 'login');
-    // Reconstruit l'URL avec les nouveaux paramètres
-    url.search = params.toString();
-    // Redirige vers la nouvelle URL
-    window.location.href = url.toString();
-});
+if ( document.querySelector('.connect') != null ){
+    document.querySelector('.connect').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche la navigation immédiate
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        // Remplace ou ajoute 'action=login'
+        params.set('action', 'login');
+        // Reconstruit l'URL avec les nouveaux paramètres
+        url.search = params.toString();
+        // Redirige vers la nouvelle URL
+        window.location.href = url.toString();
+    });
 
-document.querySelector('.inscript').addEventListener('click', function(event) {
-    event.preventDefault(); // Empêche la navigation immédiate
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    // Remplace ou ajoute 'action=login'
-    params.set('action', 'register');
-    // Reconstruit l'URL avec les nouveaux paramètres
-    url.search = params.toString();
-    // Redirige vers la nouvelle URL
-    window.location.href = url.toString();
-});
+}
+
+if ( document.querySelector('.inscript') != null ){
+    document.querySelector('.inscript').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche la navigation immédiate
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        // Remplace ou ajoute 'action=login'
+        params.set('action', 'register');
+        // Reconstruit l'URL avec les nouveaux paramètres
+        url.search = params.toString();
+        // Redirige vers la nouvelle URL
+        window.location.href = url.toString();
+    });
+}
 
 document.querySelector('.paiement').addEventListener('click', function(event) {
     event.preventDefault(); // Empêche la navigation immédiate
@@ -130,4 +161,23 @@ document.querySelector('.demande').addEventListener('click', function(event) {
     // Redirige vers la nouvelle URL
     window.location.href = url.toString();
 });
+
+const deconnexion_items = document.querySelectorAll('.deconnexion');
+if ( deconnexion_items.length > 0 ){
+        deconnexion_items.forEach((element) => {
+        element.addEventListener('click', function(event) {
+            event.preventDefault(); // Empêche la navigation immédiate
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            // Remplace ou ajoute 'action=login'
+            params.set('action', 'deconnexion');
+            // Reconstruit l'URL avec les nouveaux paramètres
+            url.search = params.toString();
+            // Redirige vers la nouvelle URL
+            window.location.href = url.toString();
+        });
+    });
+}
+
+
 </script>
