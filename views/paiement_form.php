@@ -1,3 +1,41 @@
+<?php
+
+require_once 'models/PaiementModel.php';
+require_once 'models/DemandeActe.php';
+
+    if ( isset($_POST['montant']) ){
+
+        // start enregistrer le paiement
+        $montant = $_POST['montant'];
+        $numero_carte = isset( $_POST['numero_carte'] ) ? $_POST['numero_carte'] : null;
+        $nom_carte = isset( $_POST['nom_carte'] ) ? $_POST['nom_carte'] : null;
+        $date_expiration = isset( $_POST['date_expiration'] ) ? $_POST['date_expiration'] : null;
+        $cvv = isset( $_POST['cvv'] ) ? $_POST['cvv'] : null;
+        $operateur = isset( $_POST['operateur'] ) ? $_POST['operateur'] : null;
+        $numero_telephone = isset( $_POST['numero_telephone'] ) ? $_POST['numero_telephone'] : null;
+        $id_demande = isset( $_GET['id_demande'] ) ? $_GET['id_demande'] : null;
+        
+        save((int) $montant, $numero_carte, $nom_carte, $date_expiration, $cvv, $operateur, $numero_telephone, (int) $id_demande);
+        // end enregistrer le paiement
+        
+        // start changer le status de la demande
+        if ( $id_demande != null ){
+            peyerDemande($id_demande);
+        }
+        // end changer le status de la demande
+
+        // Afficher le message de reussite
+        echo "<div class=\"popup\" id=\"popup\"> Félicitation, Paiement effectué avec succeès </div>";
+        $color  = "#d4edda";
+        $textColor = "#155724";
+
+        header("Refresh: 2; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=suivi");
+
+    }
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -54,13 +92,36 @@
         .operateur-logos img:hover {
             transform: scale(1.1);
         }
+
+        /* start popup */
+        .popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: <?= $color ?>;
+            color: <?= $textColor ?>;
+            border: 1px solid <?= $textColor ?>;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            z-index: 9999;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; top: 0px; }
+            to { opacity: 1; top: 20px; }
+        }
+        /* end popup */
     </style>
 </head>
 <body>
 
 <div class="form-container">
     <h2>Payer votre Timbre ici</h2>
-    <form method="post" action="index.php?page=validerPaiement" onsubmit="return validerPaiement();">
+    <!-- <form method="post" action="index.php?page=validerPaiement" onsubmit="return validerPaiement();"> -->
+    <form method="post" action="#" onsubmit="return validerPaiement();">
 
         <div class="form-group">
             <label>Montant :</label>

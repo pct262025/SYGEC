@@ -62,7 +62,7 @@ CREATE TABLE `citoyen` (
   PRIMARY KEY (`id_citoyen`),
   KEY `citoyen_fonction_FK` (`id_fonction`),
   CONSTRAINT `citoyen_fonction_FK` FOREIGN KEY (`id_fonction`) REFERENCES `fonction` (`id_fonction`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,6 +90,7 @@ CREATE TABLE `demande_acte` (
   `id_sous_prefecture` int(11) DEFAULT NULL,
   `id_citoyen` int(11) DEFAULT NULL,
   `id_utilisateur` int(11) DEFAULT NULL,
+  `date_creation` datetime DEFAULT NULL,
   PRIMARY KEY (`id_demande`),
   KEY `demande_acte_citoyen_FK` (`id_citoyen`),
   KEY `demande_acte_type_acte_FK` (`id_type_acte`),
@@ -99,7 +100,7 @@ CREATE TABLE `demande_acte` (
   CONSTRAINT `demande_acte_sous_prefecture_FK` FOREIGN KEY (`id_sous_prefecture`) REFERENCES `sous_prefecture` (`id_sous_prefecture`),
   CONSTRAINT `demande_acte_type_acte_FK` FOREIGN KEY (`id_type_acte`) REFERENCES `type_acte` (`id_type_acte`),
   CONSTRAINT `demande_acte_utilisateur_FK` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,6 +172,12 @@ CREATE TABLE `paiement` (
   `date_paiement` datetime DEFAULT NULL,
   `statut_paiement` varchar(255) DEFAULT NULL,
   `id_demande` int(11) DEFAULT NULL,
+  `numero_carte` varchar(255) DEFAULT NULL,
+  `nom_carte` varchar(255) DEFAULT NULL,
+  `date_expiration` datetime DEFAULT NULL,
+  `cvv` varchar(255) DEFAULT NULL,
+  `operateur` varchar(255) DEFAULT NULL,
+  `numero_telephone` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_paiement`),
   KEY `paiement_demande_acte_FK` (`id_demande`),
   CONSTRAINT `paiement_demande_acte_FK` FOREIGN KEY (`id_demande`) REFERENCES `demande_acte` (`id_demande`)
@@ -357,4 +364,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-23  3:45:40
+-- Dump completed on 2025-05-24  2:29:03

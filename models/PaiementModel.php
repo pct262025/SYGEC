@@ -1,6 +1,26 @@
 <?php
 require_once('config/Database.php');
 
+function save($montant, $numero_carte, $nom_carte, $date_expiration, $cvv, $operateur, $numero_telephone, $id_demande){
+
+    $sql = "INSERT INTO etat_civil_ci.paiement
+        (montant, date_paiement, statut_paiement, numero_carte, nom_carte, date_expiration, cvv, operateur, numero_telephone, id_demande)
+        VALUES( :montant, NOW(), \"OK\", :numero_carte, :nom_carte, :date_expiration, :cvv, :operateur, :numero_telephone, :id_demande ) ";
+
+    $stmt = Database::getConnection()->prepare($sql);
+    $stmt->bindParam(':montant', $montant);
+    $stmt->bindParam(':numero_carte', $numero_carte);
+    $stmt->bindParam(':nom_carte', $nom_carte);
+    $stmt->bindParam(':date_expiration', $date_expiration);
+    $stmt->bindParam(':cvv', $cvv);
+    $stmt->bindParam(':operateur', $operateur);
+    $stmt->bindParam(':numero_telephone', $numero_telephone);
+    $stmt->bindParam(':id_demande',  $id_demande);
+    $stmt->execute();
+
+}
+
+
 class PaiementModel {
     private $db;
 

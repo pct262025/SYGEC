@@ -1,12 +1,28 @@
 <?php 
 session_start();
-
+require_once 'models/DemandeActe.php';
 // start si l'utilisateur n'est pas connecté, on le redirige vers la connexions
 if ( !isset($_SESSION["id"]) ){
     header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=login");
+    die ();
 }
 // start si l'utilisateur n'est pas connecté, on le redirige vers la connexions
 
+$listDossierForSuivi = listDossierForSuivi($_SESSION["id"]);
+
+function getAction($status, $dossierId){
+    if ( $status == "En attente de paiement" ){
+        return "<a href=\"#\" class=\"btn btn-warning faire-paiement\" dossier=\"".$dossierId."\" > \n" .
+                "  Faire le paiement\n" .
+                " </a>";
+    }
+    if ( $status == "Payé" ){
+        return "<a href=\"#\" class=\"btn btn-success telecharger \" dossier=\"".$dossierId."\" >  \n" .
+                "  📥 Télécharger\n" .
+                " </a>";
+    }
+    return "";
+}
 ?>
 
 <!DOCTYPE html>
@@ -47,19 +63,21 @@ if ( !isset($_SESSION["id"]) ){
 require_once 'views/menu.php'; 
 ?>
 
-    <!-- <main class="main">
+    <main class="main">
 
         <div class="cards-group">
             <a href="">
                 <div class="card">
                     <div class="title">Nombre d'acte de naissance déclaré </div>
+                    <h1> <?php echo nbrDossier($_SESSION["id"], 1); ?> </h1>
                     <i class="fas fa-arrow-right arrow"></i>
                 </div>
             </a>
 
             <a href="">
                 <div class="card">
-                    <div class="title">Nbre de certificat de mariage déclaré</div>
+                    <div class="title">Nbre de certificat de nationalité déclaré</div>
+                    <h1> <?php echo nbrDossier($_SESSION["id"], 2); ?> </h1>
                     <i class="fas fa-arrow-right arrow"></i>
                 </div>
             </a>
@@ -67,80 +85,154 @@ require_once 'views/menu.php';
             <a href="">
                 <div class="card">
                     <div class="title">Demande de certificat de décés</div>
+                    <h1>0</h1>
                     <i class="fas fa-arrow-right arrow"></i>
                 </div>
             </a>
         </div>
 
         <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-10">📋 Tableau de Suivi des Actes Civils</h1>
+<?php 
+if ( empty($listDossierForSuivi) ){
+?>
+        <div class="container">
+            <div class="row">
+                <div class="offset-3 col-6 mt-5">
+                    <h4 class="text-center">Oups, aucune donnée</h4>
+                    <img class="img-fluid" src="assets/img/marquer_liste_vide.png" alt="liste_vide">
+                </div>
+            </div>
+        </div>
+<?php 
+}else {
 
-        <div class="containers  ">       
+?>
+        <div class="containers  mt-5 ">       
             
-            <table class="table border-radius mt-5 ">
+            <table class="table border border-ligh mt-5 mb-5 " style="border-radius: 15px; overflow: hidden; " >
                 <thead class=" text-white">
-                    <tr class="bg-success border-top-left-radius-10 border-top-right-radius-10">
-                        <th class="">Date de déclaration</th>
-                        <th class="">Type d’acte</th>
-                        <th class="">Nom</th>
-                        <th class="">Prénom</th>
-                        <th class="">Statut</th>
-                        <th class="">Action</th>
+                    <tr class="bg-success ">
+                        <th class="col"> <span class="btn text-white">Date de déclaration</span> </th>
+                        <th class="col"> <span class="btn text-white">Type d’acte</span> </th>
+                        <th class="col-1"> <span class="btn text-white">Nom</span> </th>
+                        <th class="col-3"> <span class="btn text-white">Prénom</span> </th>
+                        <th class="col"> <span class="btn text-white">Statut</span> </th>
+                        <th class="col-2"> <span class="btn text-white">Action</span> </th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                    <tr class="hover:bg-gray-50">
-                        <td class="col">02-02-2025</td>
-                        <td class="col">Certificat de mariage</td>
-                        <td class="col-1">Ousou</td>
-                        <td class="col-3">Benedicte</td>
+
+<?php
+
+    foreach ($listDossierForSuivi as $dossierForSuivi){
+?>
+                    <tr class="">
+                        <td class="col"> <span class="btn"> <?php echo $dossierForSuivi['date_demande'] != null ? $dossierForSuivi['date_demande'] : ""; ?> </span> </td>
+                        <td class="col"> <span class="btn"> <?php echo $dossierForSuivi['libele'] != null ? $dossierForSuivi['libele'] : ""; ?> </span> </td>
+                        <td class="col-1"> <span class="btn"> <?php echo $dossierForSuivi['nom'] != null ? $dossierForSuivi['nom'] : ""; ?> </span> </td>
+                        <td class="col-3"> <span class="btn"> <?php echo $dossierForSuivi['prenom'] != null ? $dossierForSuivi['prenom'] : ""; ?> </span> </td>
                         <td class="col">
-                            <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded">En attente</span>
+                            <span class="btn bg-light "> <?php echo $dossierForSuivi['statut'] != null ? $dossierForSuivi['statut'] : ""; ?> </span>
                         </td>
                         <td class="col-2">
-                            <a href="#" class="inline-flex items-center bg-gray-500 text-white px-3 py-1.5 rounded hover:bg-gray-600 transition">
-                                📥 Télécharger
+                            <?php echo getAction($dossierForSuivi['statut'], $dossierForSuivi['id_demande']); ?>
+                        </td>
+                    </tr>
+<?php 
+    }
+?>
+                    <!-- <tr class="">
+                        <td class="col"> <span class="btn">02-02-2025</span> </td>
+                        <td class="col"> <span class="btn">Certificat de mariage</span> </td>
+                        <td class="col-1"> <span class="btn">Ousou</span> </td>
+                        <td class="col-3"> <span class="btn">Benedicte</span> </td>
+                        <td class="col">
+                            <span class="btn bg-light ">En attente de validation</span>
+                        </td>
+                        <td class="col-2">
+
+                        </td>
+                    </tr>
+
+                    <tr class="">
+                        <td class="col"> <span class="btn">02-02-2025</span> </td>
+                        <td class="col"> <span class="btn">Certificat de mariage</span> </td>
+                        <td class="col-1"> <span class="btn">Ousou</span> </td>
+                        <td class="col-3"> <span class="btn">Benedicte</span> </td>
+                        <td class="col">
+                            <span class="btn bg-light ">En attente de paiement</span>
+                        </td>
+                        <td class="col-2">
+                            <a href="#" class="btn btn-warning">
+                                Faire le paiement
                             </a>
                         </td>
                     </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="">02-03-2025</td>
-                        <td class="">Certificat de décès</td>
-                        <td class="">Koné</td>
-                        <td class="">Mille</td>
-                        <td class="">
-                            <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Généré</span>
-                        </td>
-                        <td class="">
-                            <a href="#" class="inline-flex items-center bg-gray-500 text-white px-3 py-1.5 rounded hover:bg-gray-600 transition">
-                                📥 Télécharger
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="">02-05-2025</td>
-                        <td class="">Acte de naissance</td>
-                        <td class="">Nidé</td>
-                        <td class="">Béatrice</td>
-                        <td class="">
-                            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">Payé</span>
-                        </td>
-                        <td class="">
-                            <a href="#" class="inline-flex items-center bg-primary text-white px-3 py-1.5 rounded hover:bg-green-700 transition">
-                                📥 Télécharger
-                            </a>
                     
+                    <tr class="">
+                        <td class="col"> <span class="btn">02-02-2025</span> </td>
+                        <td class="col"> <span class="btn">Certificat de mariage</span> </td>
+                        <td class="col-1"> <span class="btn">Ousou</span> </td>
+                        <td class="col-3"> <span class="btn">Benedicte</span> </td>
+                        <td class="col">
+                            <span class="btn bg-light text-success">Payé</span>
+                        </td>
+                        <td class="col-2">
+                            <a href="#" class="btn btn-success">
+                                📥 Télécharger
+                            </a>
                         </td>
                     </tr>
+                    
+                    <tr class="">
+                        <td class="col"> <span class="btn">02-02-2025</span> </td>
+                        <td class="col"> <span class="btn">Certificat de mariage</span> </td>
+                        <td class="col-1"> <span class="btn">Ousou</span> </td>
+                        <td class="col-3"> <span class="btn">Benedicte</span> </td>
+                        <td class="col">
+                            <span class="btn bg-light ">Deja téléchargé</span>
+                        </td>
+                        <td class="col-2">
+
+                        </td>
+                    </tr> -->
+                    
                 </tbody>
             </table>
         </div>
 
-    </main> -->
+
+
+<?php 
+}
+?>
+    </main>
 
 <?php 
 require_once "views/footer.php";
 ?>
 
+
+<script>
+    const paiement_items = document.querySelectorAll('.faire-paiement');
+    paiement_items.forEach((element) => {
+        element.addEventListener('click', function(event) {
+            event.preventDefault(); // Empêche la navigation immédiate
+
+            const id_demande = this.getAttribute('dossier');
+
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            // Remplace ou ajoute 'action=login'
+            params.set('action', 'paiement');
+            params.set('id_demande', id_demande);
+            // Reconstruit l'URL avec les nouveaux paramètres
+            url.search = params.toString();
+            // Redirige vers la nouvelle URL
+            window.location.href = url.toString();
+        });
+    });
+</script>
 
 </body>
 </html>

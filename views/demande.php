@@ -7,6 +7,7 @@
     // start si l'utilisateur n'est pas connecté, on le redirige vers la connexions
     if ( !isset($_SESSION["id"]) ){
         header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=login");
+        die ();
     }
     // start si l'utilisateur n'est pas connecté, on le redirige vers la connexions
 
