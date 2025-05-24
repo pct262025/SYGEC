@@ -132,7 +132,7 @@ if ( empty($listDossierForSuivi) ){
                         <td class="col-1"> <span class="btn"> <?php echo $dossierForSuivi['nom'] != null ? $dossierForSuivi['nom'] : ""; ?> </span> </td>
                         <td class="col-3"> <span class="btn"> <?php echo $dossierForSuivi['prenom'] != null ? $dossierForSuivi['prenom'] : ""; ?> </span> </td>
                         <td class="col">
-                            <span class="btn bg-light "> <?php echo $dossierForSuivi['statut'] != null ? $dossierForSuivi['statut'] : ""; ?> </span>
+                            <span class="btn  <?php echo $dossierForSuivi['statut'] == 'Annuler' ? 'bg-danger text-white' : 'bg-light'; ?> "> <?php echo $dossierForSuivi['statut'] != null ? $dossierForSuivi['statut'] : ""; ?> </span>
                         </td>
                         <td class="col-2">
                             <?php echo getAction($dossierForSuivi['statut'], $dossierForSuivi['id_demande']); ?>
@@ -141,61 +141,6 @@ if ( empty($listDossierForSuivi) ){
 <?php 
     }
 ?>
-                    <!-- <tr class="">
-                        <td class="col"> <span class="btn">02-02-2025</span> </td>
-                        <td class="col"> <span class="btn">Certificat de mariage</span> </td>
-                        <td class="col-1"> <span class="btn">Ousou</span> </td>
-                        <td class="col-3"> <span class="btn">Benedicte</span> </td>
-                        <td class="col">
-                            <span class="btn bg-light ">En attente de validation</span>
-                        </td>
-                        <td class="col-2">
-
-                        </td>
-                    </tr>
-
-                    <tr class="">
-                        <td class="col"> <span class="btn">02-02-2025</span> </td>
-                        <td class="col"> <span class="btn">Certificat de mariage</span> </td>
-                        <td class="col-1"> <span class="btn">Ousou</span> </td>
-                        <td class="col-3"> <span class="btn">Benedicte</span> </td>
-                        <td class="col">
-                            <span class="btn bg-light ">En attente de paiement</span>
-                        </td>
-                        <td class="col-2">
-                            <a href="#" class="btn btn-warning">
-                                Faire le paiement
-                            </a>
-                        </td>
-                    </tr>
-                    
-                    <tr class="">
-                        <td class="col"> <span class="btn">02-02-2025</span> </td>
-                        <td class="col"> <span class="btn">Certificat de mariage</span> </td>
-                        <td class="col-1"> <span class="btn">Ousou</span> </td>
-                        <td class="col-3"> <span class="btn">Benedicte</span> </td>
-                        <td class="col">
-                            <span class="btn bg-light text-success">Payé</span>
-                        </td>
-                        <td class="col-2">
-                            <a href="#" class="btn btn-success">
-                                📥 Télécharger
-                            </a>
-                        </td>
-                    </tr>
-                    
-                    <tr class="">
-                        <td class="col"> <span class="btn">02-02-2025</span> </td>
-                        <td class="col"> <span class="btn">Certificat de mariage</span> </td>
-                        <td class="col-1"> <span class="btn">Ousou</span> </td>
-                        <td class="col-3"> <span class="btn">Benedicte</span> </td>
-                        <td class="col">
-                            <span class="btn bg-light ">Deja téléchargé</span>
-                        </td>
-                        <td class="col-2">
-
-                        </td>
-                    </tr> -->
                     
                 </tbody>
             </table>
