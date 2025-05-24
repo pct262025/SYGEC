@@ -11,9 +11,9 @@
             <li><a href="#" class="demande">Demande d'Actes</a></li>
             <!-- <li><a href="#">Declaration d'Actes</a></li> -->
             <li><a href="#" class="suivi">Suivi</a></li>
-            <li>
+            <!-- <li>
                 <a href="#?action=paiement" class="paiement">Paiement</a>
-            </li>
+            </li> -->
             <li><a href="#">Contacts</a></li>
             <li><a class="traiterDemande" href="#?action=traiterDemande">Administration</a></li>
         </ul>
@@ -49,7 +49,7 @@ if ( isset($_SESSION['nom']) ){
                 <li><a href="#">Demande d'Actes</a></li>
                 <!-- <li><a href="#">Declaration d'Actes</a></li> -->
                 <li><a href="#">Suivi</a></li>
-                <a href="index.php?action=paiement">Paiement</a>
+                <!-- <a href="index.php?action=paiement">Paiement</a> -->
                 <li><a href="#">Contacts</a></li>
                 <li><a href="#">Administration</a></li>
             </ul>
@@ -102,17 +102,19 @@ if ( document.querySelector('.inscript') != null ){
     });
 }
 
-document.querySelector('.paiement').addEventListener('click', function(event) {
-    event.preventDefault(); // Empêche la navigation immédiate
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    // Remplace ou ajoute 'action=login'
-    params.set('action', 'paiement');
-    // Reconstruit l'URL avec les nouveaux paramètres
-    url.search = params.toString();
-    // Redirige vers la nouvelle URL
-    window.location.href = url.toString();
-});
+if ( document.querySelector('.paiement') != null ){
+    document.querySelector('.paiement').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche la navigation immédiate
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        // Remplace ou ajoute 'action=login'
+        params.set('action', 'paiement');
+        // Reconstruit l'URL avec les nouveaux paramètres
+        url.search = params.toString();
+        // Redirige vers la nouvelle URL
+        window.location.href = url.toString();
+    });
+}
 
 document.querySelector('.traiterDemande').addEventListener('click', function(event) {
     event.preventDefault(); // Empêche la navigation immédiate
