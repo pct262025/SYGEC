@@ -27,7 +27,7 @@ if ( isset($_POST['nom']) ) { // Cela veut dire que le formulaire a été valid�
         $color  = "#d4edda";
         $textColor = "#155724";
 
-        header("Refresh: 3; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=accueil");
+        header("Refresh: 3; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=login");
     }
     
 
