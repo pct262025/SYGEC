@@ -10,16 +10,38 @@ if ( !isset($_SESSION["id"]) ){
 
 $listDossierForSuivi = listDossierForSuivi($_SESSION["id"]);
 
-function getAction($status, $dossierId){
-    if ( $status == "En attente de paiement" ){
-        return "<a href=\"#\" class=\"btn btn-warning faire-paiement\" dossier=\"".$dossierId."\" > \n" .
-                "  Faire le paiement\n" .
-                " </a>";
+// function getAction($status, $dossierId){
+//     if ( $status == "En attente de paiement" ){
+//         return "<a href=\"#\" class=\"btn btn-warning faire-paiement\" dossier=\"".$dossierId."\" > \n" .
+//                 "  Faire le paiement\n" .
+//                 " </a>";
+//     }
+//     if ( $status == "Payé" ){
+//         return "<a href=\"#\" class=\"btn btn-success telecharger \" dossier=\"".$dossierId."\" >  \n" .
+//                 "  📥 Télécharger\n" .
+//                 " </a>";
+//     }
+//     return "";
+// }
+
+function getAction($status, $dossierId, $typeActe){
+    if ($status == "En attente de paiement") {
+        return "<a href=\"#\" class=\"btn btn-warning faire-paiement\" dossier=\"".$dossierId."\" >
+                  Faire le paiement
+                </a>";
     }
-    if ( $status == "Payé" ){
-        return "<a href=\"#\" class=\"btn btn-success telecharger \" dossier=\"".$dossierId."\" >  \n" .
-                "  📥 Télécharger\n" .
-                " </a>";
+    if ($status == "Payé") {
+        if ($typeActe == "Acte de naissance") {
+            return '<a href="index.php?action=telechargerCertificatNaissance&id_demande='.$dossierId.'" 
+                      class="btn btn-success" title="Télécharger Certificat de Naissance">
+                      <i class="fas fa-download"></i> Télécharger
+                    </a>';
+        } else {
+            return '<a href="index.php?action=telechargerPDF&id_demande='.$dossierId.'" 
+                      class="btn btn-success" title="Télécharger PDF">
+                      <i class="fas fa-download"></i> Télécharger
+                    </a>';
+        }
     }
     return "";
 }
@@ -109,7 +131,7 @@ if ( empty($listDossierForSuivi) ){
 ?>
         <div class="containers  mt-5 ">       
             
-            <table class="table border border-ligh mt-5 mb-5 " style="border-radius: 15px; overflow: hidden; " >
+            <table id="suivie-table" class="table border border-ligh mt-5 mb-5 " style="border-radius: 15px; overflow: hidden; " >
                 <thead class=" text-white">
                     <tr class="bg-success ">
                         <th class="col"> <span class="btn text-white">Date de déclaration</span> </th>
@@ -135,7 +157,8 @@ if ( empty($listDossierForSuivi) ){
                             <span class="btn  <?php echo $dossierForSuivi['statut'] == 'Annuler' ? 'bg-danger text-white' : 'bg-light'; ?> "> <?php echo $dossierForSuivi['statut'] != null ? $dossierForSuivi['statut'] : ""; ?> </span>
                         </td>
                         <td class="col-2">
-                            <?php echo getAction($dossierForSuivi['statut'], $dossierForSuivi['id_demande']); ?>
+                            <?php // echo getAction($dossierForSuivi['statut'], $dossierForSuivi['id_demande']); ?>
+                            <?php echo getAction($dossierForSuivi['statut'], $dossierForSuivi['id_demande'], $dossierForSuivi['libele']); ?>
                         </td>
                     </tr>
 <?php 

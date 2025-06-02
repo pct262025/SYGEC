@@ -215,4 +215,48 @@ function listDossierForSuivi($id_citoyen){
     return $stmt->fetchAll();
 }
 
+function getDossierById($id_demande, $id_citoyen) {
+    $conn = Database::getConnection();
+
+    $sql = "
+        SELECT 
+            da.id_demande AS id,
+            da.id_citoyen,
+            da.statut,
+            DATE_FORMAT(da.date_demande, '%d/%m/%Y %H:%i:%s') AS date_demande,
+            da.id_type_acte,
+            ta.libele,
+            c.nom,
+            c.prenom,
+            c.numero_registre,
+            c.lieu_naissance,
+            pere.nom AS nom_pere,
+            pere.prenom AS prenom_pere,
+            mere.nom AS nom_mere,
+            mere.prenom AS prenom_mere
+        FROM demande_acte da
+        INNER JOIN citoyen c ON c.id_citoyen = da.id_citoyen
+        LEFT JOIN citoyen pere ON pere.login = c.login_citoyen_pere
+        LEFT JOIN citoyen mere ON mere.login = c.login_citoyen_mere
+        INNER JOIN type_acte ta ON ta.id_type_acte = da.id_type_acte
+        WHERE da.id_demande = :id AND da.id_citoyen = :id_citoyen
+    ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        'id' => $id_demande,
+        'id_citoyen' => $id_citoyen
+    ]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function changerStatus($id, $status){
+    $sql = "UPDATE demande_acte SET statut = :statut WHERE id_demande = :id_demande";
+    $stmt = Database::getConnection()->prepare($sql);
+    $stmt->bindParam(':id_demande', $id);
+    $stmt->bindParam(':statut', $status);
+    return $stmt->execute(); // pas de fetch
+}
+
 ?>

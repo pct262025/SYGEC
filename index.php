@@ -61,4 +61,17 @@ switch ($action) {
         $controller->demande();
         break;
 
+    // Ajout de la route pour télécharger le PDF
+    case 'telechargerPDF':
+        require_once('controllers/DemandeController.php');
+        $controller = new DemandeController();
+        $controller->telechargerCertificatNaissance(); // avant c’était telechargerPDF()
+        break;
+    
+    case 'telechargerCertificatNaissance':
+        require_once('controllers/DemandeController.php');
+        $controller = new DemandeController();
+        $controller->telechargerPDF(); // avant c’était telechargerCertificatNaissance()
+        break;
+
 }
