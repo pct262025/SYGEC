@@ -35,7 +35,9 @@ if ( isset($_POST['login']) ){
             $color  = "#d4edda";
             $textColor = "#155724";
 
-            header("Refresh: 3; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=accueil");
+            $redirect = "?action=". (isset($_GET['retour']) ? $_GET['retour'] : "accueil");
+            header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . $redirect);
+            // header("Refresh: 3; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=accueil");
         }
     }
 }
