@@ -29,7 +29,7 @@ require_once 'models/DemandeActe.php';
         $color  = "#d4edda";
         $textColor = "#155724";
 
-        header("Refresh: 2; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=suivi");
+        header("Refresh: 1; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=suivi");
 
     }
 
@@ -93,6 +93,10 @@ require_once 'models/DemandeActe.php';
             transform: scale(1.1);
         }
 
+        .img-actif {
+            transform: scale(1.5);
+        }
+
         /* start popup */
         .popup {
             position: fixed;
@@ -114,7 +118,21 @@ require_once 'models/DemandeActe.php';
             to { opacity: 1; top: 20px; }
         }
         /* end popup */
+
+        /* start qr-code */
+        .qrcode-container{
+            /* text-align: center; */
+        }
+        .qrcode{
+            display: inline-block;
+            margin-left: 40%;
+        }
+        /* end qr-code */
     </style>
+
+
+    <script src="qrcode/jquery.min.js"></script>
+    <script src="qrcode/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -125,7 +143,7 @@ require_once 'models/DemandeActe.php';
 
         <div class="form-group">
             <label>Montant :</label>
-            <input type="number" name="montant" id="montant" class="form-control" required>
+            <input type="number" name="montant" id="montant" <?php if (isset($_GET["montant"])){echo "value=".$_GET["montant"];} ?> class="form-control" onchange="setMontant()" required>
         </div>
 
         <div class="form-group">
@@ -161,33 +179,23 @@ require_once 'models/DemandeActe.php';
         <div id="mobile_money_fields" style="display: none;">
             <div class="operateur-logos">
                 <div class="operateur-logos">
-                          <img src="assets/img/mtn.png" alt="MTN">
-                          <img src="assets/img/moov.jpg" alt="Moov">
-                          <img src="assets/img/orange.jpg" alt="Orange">
-                          <img src="assets/img/wave.jpg" alt="Wave">
+                          <img class="icons" src="assets/img/mtn.png" alt="MTN" onclick="setOperateur('MTN')">
+                          <img class="icons" src="assets/img/moov.jpg" alt="Moov" onclick="setOperateur('Moov')">
+                          <img class="icons" src="assets/img/orange.jpg" alt="Orange" onclick="setOperateur('Orange')">
+                          <img class="icons" src="assets/img/wave.jpg" alt="Wave" onclick="setOperateur('Wave')">
                 </div>
 
             </div>
 
-            <div class="form-group">
-                <label>Choisir l'opérateur :</label>
-                <select name="operateur" class="form-select">
-                    <option value="">-- Sélectionner --</option>
-                    <option value="MTN">MTN</option>
-                    <option value="Moov">Moov</option>
-                    <option value="Orange">Orange</option>
-                    <option value="Wave">Wave</option>
-                </select>
+            <input type="hidden" name="operateur" id="operateur">
+
+            <div id="qrcode-container" class="qrcode-container" style="display: none;">
+                <span class="qrcode" id="qr-codes"></span>
             </div>
 
-            <div class="form-group">
-                <label>Numéro de téléphone :</label>
-                <input type="tel" name="numero_telephone" class="form-control">
-            </div>
-             <div id="numero_reception" class="alert alert-info">
-                 Veuillez effectuer le paiement Mobile Money au numéro suivant : <strong>07 07 07 07 07</strong>
-            </div>
         </div>
+        
+
           <!-- Bloc de confirmation de paiement -->
 <div id="confirmation_paiement" style="display: none;" class="text-center mt-3">
     <button type="button" class="btn btn-success" onclick="confirmerPaiement()">J'ai déjà payé</button>
@@ -201,10 +209,19 @@ require_once 'models/DemandeActe.php';
 </div>
 
 <script>
+let intervalId = null;
+
 function afficherChampsPaiement() {
     const mode = document.getElementById('mode_paiement').value;
     document.getElementById('carte_bancaire_fields').style.display = (mode === 'Carte bancaire') ? 'block' : 'none';
     document.getElementById('mobile_money_fields').style.display = (mode === 'Mobile Money') ? 'block' : 'none';
+
+    if ( mode === 'Carte bancaire' && intervalId != null ){
+         clearInterval(intervalId);
+    } 
+    else if ( mode === 'Mobile Money' ) {
+        intervalId = setInterval(verifierStatut, 1000);
+    }
 }
 
 function validerPaiement() {
@@ -216,6 +233,107 @@ function validerPaiement() {
     }
     return true;
 }
+
+
+// start logique de paiement par qrcode
+
+const url = new URL(window.location.href);
+const params = new URLSearchParams(url.search);
+const id_demande = params.get("id_demande");
+let montant = document.getElementById('montant').value ;
+let operateur = document.getElementById('operateur').value ;
+
+function setOperateur(arg){
+    document.getElementById('operateur').value = arg;
+    document.getElementById('qrcode-container').style.display = "block";
+
+    montant = document.getElementById('montant').value ;
+    operateur = document.getElementById('operateur').value ;
+    genererQrCode();
+}
+
+function setMontant(){
+    montant = document.getElementById('montant').value;
+    genererQrCode();
+}
+
+
+function genererQrCode(){
+
+    const qrContainer = document.getElementById("qr-codes");
+
+    // ❌ Supprime l'ancien QR Code
+    qrContainer.innerHTML = "";
+
+    new QRCode(qrContainer, {
+        text: `http://192.168.1.7/sygec/?action=payement-par-qrcode&id_demande=${id_demande}&montant=${montant}&operateur=${operateur}`,
+        // text: `http://192.168.1.7/sygec/`,
+        width: 128,
+        height: 128,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+}
+
+function verifierStatut() {
+    console.log("verifier que le paiement est fait");
+    fetch(`http://localhost/sygec/models/api/checkSTatusApi.php/?id_demande=${id_demande}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data === false) {
+            // Ne rien faire si réponse false
+            return;
+        }
+        if (data.status === 1) {
+
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            params.set('action', 'suivi');
+            url.search = params.toString();
+            window.location.href = url.toString();
+        }
+    })
+    .catch(error => {
+        console.error('Erreur API :', error);
+    });
+}
+
+// end logique de paiement par qrcode
+
+// start rendre un operateur actif
+const icons = document.querySelectorAll('.icons');
+icons.forEach(icon => {
+  icon.addEventListener('click', () => {
+    // enlever la classe 'okok' de tous les items
+    icons.forEach(el => el.classList.remove('img-actif'));
+    
+    // ajouter la classe 'okok' à l'élément cliqué
+    icon.classList.add('img-actif');
+
+    selectedOperateur = icon.getAttribute('data-operateur');
+    // mettre à jour le champ caché
+    // document.getElementById('operateur').value = selectedOperateur;
+  });
+});
+
+
+// end rendre un operateur actif
+
+// document.querySelectorAll('.icons').forEach(img => {
+//     img.addEventListener('click', () => {
+//         selectedOperateur = img.getAttribute('data-operateur');
+//         console.log('Sélectionné :', selectedOperateur);
+
+//         // mettre à jour le champ caché
+//         document.getElementById('operateur').value = selectedOperateur;
+        
+//         // Optionnel: effet visuel pour montrer la sélection
+//         document.querySelectorAll('.icons').forEach(el => el.classList.remove('okok'));
+//         img.classList.add('okok');
+//     });
+// });
+// end
 </script>
 
 </body>

@@ -21,11 +21,21 @@
 
         }else{
 
+            date_default_timezone_set('Africa/Abidjan');
+
             $statut = 'En attente de validation';
             $id_type_acte = $_POST["typeacte"] == "naissance" ? 1 : 2;
             $id_citoyen = $_SESSION["id"];
 
-            creerUneDemande($statut, $id_type_acte, $id_citoyen);
+            $justificatif_path = null;
+            $current_date = date('Y-m-d H:i:s');
+            $nationalite = null;
+            $profession = null;
+            $numero_registre = null;
+            $deces_a = null;
+            $deces_le = null;
+
+            // creerUneDemande($statut, $id_type_acte, $id_citoyen);
 
             
             $nom = $_POST["nom"];
@@ -51,6 +61,12 @@
             $prenom_conjoint = isset($_POST["pnomcj"]) ? $_POST["pnomcj"] : null;
             $email = isset($_POST["email"]) ? $_POST["email"] : null;
             $contact = isset($_POST["telephone"]) ? $_POST["telephone"] : null;
+
+            creerUneDemande2($statut, $justificatif_path, $id_type_acte, $id_citoyen, $current_date, 
+            $nom, $prenom, $lieu_naissance, $date_naissance, $heure_naissance, $contact, $nationalite, $email, $profession, 
+            $numero_registre, $marie_a, $marie_le, $divorce_le, $deces_a, $deces_le, $nom_pere, $prenom_pere, $proffession_pere, 
+            $date_naissance_pere, $lieu_naissance_pere, $nom_mere, $prenom_mere, $proffession_mere, $date_naissance_mere, 
+            $lieu_naissance_mere, $nom_conjoint, $prenom_conjoint, $lieu_habitation);
 
             updateWithDemandeInfo(
                 $nom,

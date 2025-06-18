@@ -73,5 +73,11 @@ switch ($action) {
         $controller = new DemandeController();
         $controller->telechargerPDF(); // avant c’était telechargerCertificatNaissance()
         break;
+    
+    case 'payement-par-qrcode':
+        require_once('controllers/PaiementController.php');
+        $controller = new PaiementController();
+        $controller->validerPaiement2(); // avant c’était telechargerCertificatNaissance()
+        break;
 
 }

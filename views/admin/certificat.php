@@ -55,107 +55,6 @@ require_once 'views/menu.php';
 <!-- end menu -->
 
 
-<!-- start formulaire de validation bg-dark -->
-<?php 
-
-if ( isset($_GET['id']) ) { 
-    $info_certificat = certificatAttenteValidation($_GET['id']);
-    if ( $info_certificat != null ){
-?>
-<div class=" rgba-dark-25 top-0 width-100_pc min-height-100vh position-fixed z-index-10 ">
-    
-    <div class=" d-flex justify-content-center ">
-        <!-- opacity-100 -->
-
-        <div class="    width-50_pc margin-top-75px">
-
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Informations de la demande</h5>
-                    <span type="button" class="btn-close ferme-modal"  data-bs-dismiss="modal" aria-label="Close"></span>
-                </div>
-                <div class="modal-body overflow-auto max-height-60vh">
-                    
-                    <table class="table mt-2 mb-2">
-
-                        <tbody>
-                            <tr>
-                                <td class="col">Nom</th>
-                                <td class="col"> <?php echo $info_certificat['nom'] != null ? $info_certificat['nom'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Prénom</th>
-                                <td class="col"> <?php echo $info_certificat['prenom'] != null ? $info_certificat['prenom'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Date de naissance</th>
-                                <td class="col"> <?php echo $info_certificat['date_naissance'] != null ? $info_certificat['date_naissance'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Lieu de naissance</th>
-                                <td class="col"> <?php echo $info_certificat['lieu_naissance'] != null ? $info_certificat['lieu_naissance'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Nom du père</th>
-                                <td class="col"> <?php echo $info_certificat['nom_pere'] != null ? $info_certificat['nom_pere'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Prenom du père</th>
-                                <td class="col"> <?php echo $info_certificat['prenom_pere'] != null ? $info_certificat['prenom_pere'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Nom de la mère</th>
-                                <td class="col"> <?php echo $info_certificat['nom_mere'] != null ? $info_certificat['nom_mere'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Prenom de la mère</th>
-                                <td class="col"> <?php echo $info_certificat['prenom_mere'] != null ? $info_certificat['prenom_mere'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Marié le </th>
-                                <td class="col"> <?php echo $info_certificat['marie_le'] != null ? $info_certificat['marie_le'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Marié à </th>
-                                <td class="col"> <?php echo $info_certificat['marie_a'] != null ? $info_certificat['marie_a'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Marié avec </th>
-                                <td class="col"> <?php echo $info_certificat['marie_avec'] != null ? $info_certificat['marie_avec'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Mariage dissous avec decision de divorce en date du</th>
-                                <td class="col"> <?php echo $info_certificat['divorce_le'] != null ? $info_certificat['divorce_le'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Décès le</th>
-                                <td class="col"> <?php echo $info_certificat['deces_le'] != null ? $info_certificat['deces_le'] : '---Neant---' ; ?> </td>
-                            </tr>
-                            <tr>
-                                <td class="col">Décès à</th>
-                                <td class="col"> <?php echo $info_certificat['deces_a'] != null ? $info_certificat['deces_a'] : '---Neant---' ; ?> </td>
-                            </tr>
-                        </tbody>
-
-                    </table>
-
-                </div>
-                <div class="modal-footer">
-                    <span type="button" class="btn btn-secondary ferme-modal" data-bs-dismiss="modal">Close</span>
-                    <span type="button" id="btn-annulation" <?php if ( isset($_GET["id"]) ){ echo "data-id=\"".$_GET["id"]."\""; } ?> class="btn btn-danger">Annuler</span>
-                    <span type="button" id="btn-validation" <?php if ( isset($_GET["id"]) ){ echo "data-id=\"".$_GET["id"]."\""; } ?> class="btn btn-primary">Accepter</span>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div>
-<?php 
-    }
-}
-?>
-<!-- end formulaire de validation -->
 
 <div class="container-fluid">
     <div class="row">
@@ -187,8 +86,137 @@ if ( isset($_GET['id']) ) {
                 <div class="col-11">
 
 <?php 
-$all_certificat = listCertificatAttenteValidation();
-if ( empty($all_certificat) ){ 
+$detail = false;
+if ( isset($_GET['id']) ) { 
+    $info_demande = certificatAttenteValidation($_GET['id']);
+    if ( $info_demande != null ){
+        $detail = true;
+
+?>
+<div class="row ">
+    <div class="col-10 offset-1 ombre min-height-80vh bg-white m-5 p-3 ">
+    
+        <h1 class="mt-5 text-center" >INFORMATIONS DE LA DEMANDE</h1>
+        <p class="text-center">*************************************************************</p>
+        
+        <div class="row mt-5">
+            <div class="col-4 btn btn-light text-start">Nom</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['nom'] != null ? $info_demande['nom'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Prénoms</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['prenom'] != null ? $info_demande['prenom'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Date de naissance</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['date_naissance'] != null ? $info_demande['date_naissance'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Lieu de naissance</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['lieu_naissance'] != null ? $info_demande['lieu_naissance'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">heure de naissance</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['heure_naissance'] != null ? $info_demande['heure_naissance'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Nom du père</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['nom_pere'] != null ? $info_demande['nom_pere'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Prénoms du père</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['prenom_pere'] != null ? $info_demande['prenom_pere'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Date de naissance du père</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['date_naissance_pere'] != null ? $info_demande['date_naissance_pere'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Lieu de naissance du père</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['lieu_naissance_pere'] != null ? $info_demande['lieu_naissance_pere'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Nom de la mère</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['nom_mere'] != null ? $info_demande['nom_mere'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Prénoms de la mère</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['prenom_mere'] != null ? $info_demande['prenom_mere'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Date de naissance de la mère</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['date_naissance_mere'] != null ? $info_demande['date_naissance_mere'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Lieu de naissance de la mère</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['lieu_naissance_mere'] != null ? $info_demande['lieu_naissance_mere'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Marié le</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['marie_le'] != null ? $info_demande['marie_le'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Marié à</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['marie_a'] != null ? $info_demande['marie_a'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Marié avec</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['marie_avec'] != null ? $info_demande['marie_avec'] : '---Neant---' ; ?></div>
+        </div>
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Divorcé le</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['divorce_le'] != null ? $info_demande['divorce_le'] : '---Neant---' ; ?></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-4 btn btn-light text-start">Décédé le</div>
+            <div class="offset-1 col-7 btn btn-light text-start"><?php echo $info_demande['deces_le'] != null ? $info_demande['deces_le'] : '---Neant---' ; ?></div>
+        </div>
+
+        <h3 class="mt-5 text-center" >PIECES JOINTES</h3>
+        <p class="text-center">***********************************</p>
+
+        <div class="row ">
+            <div class="offset-3 col-6">
+                <img class="text-center img-fluid" src="assets/img_dynamique/citoyen/1/piece_identite.png" alt="">
+            </div>
+        </div>
+
+        <div class="mt-5 text-end">
+            <span type="button" class="btn btn-secondary ferme-modal " >Close</span>
+
+            <?php if ($info_demande['statut'] == 'En attente de validation' ) { ?>
+            <span type="button" id="btn-annulation" <?php if ( isset($_GET["id"]) ){ echo "data-id=\"".$_GET["id"]."\""; } ?> class="btn btn-danger ">Rejeter</span>
+            <?php } ?>
+
+            <?php if ($info_demande['statut'] == 'Rejeter' || $info_demande['statut'] == 'En attente de validation' ) { ?>
+            <span type="button" id="btn-validation" <?php if ( isset($_GET["id"]) ){ echo "data-id=\"".$_GET["id"]."\""; } ?> class="btn btn-primary ">Accepter</span>
+            <?php } ?>
+        </div>
+        
+    </div>
+</div>
+<?php
+    }
+}
+if ( $detail == false ){
+    $all_certificat = listCertificatAttenteValidation();
+    if ( empty($all_certificat) ){ 
 ?>
     <div class="row">
         <div class="col-8 offset-2">
@@ -197,7 +225,8 @@ if ( empty($all_certificat) ){
     </div>
             
 <?php 
-}else{
+    }
+    else{
     
 ?>
 
@@ -223,14 +252,17 @@ if ( empty($all_certificat) ){
                                 <td class="col-1 justify-content-center "> 
                                     <div class="d-flex justify-content-center">
                                         <a class="one-certificat" href="#" data-id="<?php echo $certificat['id_demande']; ?>">
-                                            <span class="btn btn-danger">
-                                                Action
+                                            <span class="btn btn-primary">
+                                                Editer
                                             </span>
                                         </a>
                                     </div>  
                                 </td>
                             </tr>
-<?php    }?>                       
+<?php    
+    }
+}
+?>                       
                         </tbody>
                     </table>
 

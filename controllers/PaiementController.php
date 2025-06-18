@@ -7,6 +7,10 @@ class PaiementController {
         require_once('views/paiement_form.php');
     }
 
+    public function validerPaiement2() {
+        require_once('views/valider_qrcode_paiement.php');
+    }
+
     public function validerPaiement() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $montant = $_POST['montant'];
