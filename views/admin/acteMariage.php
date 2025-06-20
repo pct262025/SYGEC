@@ -68,9 +68,9 @@ require_once 'views/menu.php';
                 <div id="demandes" class="fw-bold menu-principal col-12 menu-item ">
                     <span id="demandes-toggle-icon" class="icon">−</span> Gestion des demandes
                 </div>
-                <a href="#?action=traiterDemande" id="demandes-menu-actes-naissance" class="col-11 offset-1 menu-item orange annuler-text-decoration annuler-heritage-color-hover acte-naissance">Actes de naissance</a>
+                <a href="#?action=traiterDemande" id="demandes-menu-actes-naissance" class="col-11 offset-1 menu-item text-dark annuler-text-decoration annuler-heritage-color-hover acte-naissance">Actes de naissance</a>
                 <a href="#" id="demandes-menu-certification-nationalite" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover certificat">Certificat de Nationalité</a>
-                <a href="#" id="demandes-menu-actes-mariage" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover acte-mariage">Actes de mariage</a>
+                <a href="#" id="demandes-menu-actes-mariage" class="col-11 offset-1 orange menu-item annuler-text-decoration annuler-heritage-color-hover acte-mariage">Actes de mariage</a>
             </div>
             <div class="row">
                 <div id="users" class="fw-bold menu-principal col-12 menu-item ">
@@ -92,7 +92,7 @@ require_once 'views/menu.php';
 <?php 
 $detail = false;
 if ( isset($_GET['id']) ) { 
-    $info_demande = demandeAttenteValidation($_GET['id']);
+    $info_demande = acteNaissanceenteValidation($_GET['id']);
     if ( $info_demande != null ){
         $detail = true;
 ?>
@@ -172,9 +172,10 @@ if ( isset($_GET['id']) ) {
         </div>
 
         <?php if ( $info_demande['piece_jointe'] != null ) { ?>
+        
         <h3 class="mt-5 text-center" >PIECES JOINTES</h3>
         <p class="text-center">***********************************</p>
-
+        
         <div class="row ">
             <div class="offset-3 col-6">
                 <img class="text-center img-fluid" src="<?php echo $info_demande['piece_jointe']; ?>" alt="La piece jointe">
@@ -201,8 +202,8 @@ if ( isset($_GET['id']) ) {
 }
 if ( $detail == false ){
 
-    $all_demande_acte = listDemandeAttenteValidation();
-    if ( empty($all_demande_acte) ){
+    $all_demande_acte_mariage = listActeNaissanceAttenteValidation();
+    if ( empty($all_demande_acte_mariage) ){
     ?>
     
     <div class="row">
@@ -227,17 +228,17 @@ if ( $detail == false ){
                             </tr>
                         </thead>
                         <tbody>
-<?php foreach($all_demande_acte as $demande_acte){
+<?php foreach($all_demande_acte_mariage as $demande_acte_mariage){
         
      ?>
                             <tr>
-                                <td class="col-2"> <?php echo $demande_acte['id_demande'] != null ? $demande_acte['id_demande'] : '---Néant---'; ?> </th>
-                                <td class="col"> <?php echo $demande_acte['nom'] != null ? $demande_acte['nom'] : '---Néant---'; ?> </td>
-                                <td class="col"> <?php echo $demande_acte['prenom'] != null ? $demande_acte['prenom'] : '---Néant---'; ?> </td>
-                                <td class="col"> <?php echo $demande_acte['statut'] != null ? $demande_acte['statut'] : '---Néant---'; ?> </td>
+                                <td class="col-2"> <?php echo $demande_acte_mariage['id_demande'] != null ? $demande_acte_mariage['id_demande'] : '---Néant---'; ?> </th>
+                                <td class="col"> <?php echo $demande_acte_mariage['nom'] != null ? $demande_acte_mariage['nom'] : '---Néant---'; ?> </td>
+                                <td class="col"> <?php echo $demande_acte_mariage['prenom'] != null ? $demande_acte_mariage['prenom'] : '---Néant---'; ?> </td>
+                                <td class="col"> <?php echo $demande_acte_mariage['statut'] != null ? $demande_acte_mariage['statut'] : '---Néant---'; ?> </td>
                                 <td class="col-1 justify-content-center "> 
                                     <div class="d-flex justify-content-center">
-                                        <a class="one-acte-naissance" href="#" data-id="<?php echo $demande_acte['id_demande']; ?>">
+                                        <a class="one-acte-mariage" href="#" data-id="<?php echo $demande_acte_mariage['id_demande']; ?>">
                                             <span class="btn btn-primary">
                                                 Editer
                                             </span>
@@ -345,7 +346,7 @@ if ( $detail == false ){
             window.location.href = url.toString();
         });
 
-        Array.from( document.getElementsByClassName('one-acte-naissance') ).forEach (element => {
+        Array.from( document.getElementsByClassName('one-acte-mariage') ).forEach (element => {
             element.addEventListener('click', function(event) {
                 const id = this.getAttribute('data-id'); // récupère l'id dynamique
                 const url = new URL(window.location.href);
