@@ -12,6 +12,10 @@ class AdminController{
         require_once 'views/admin/certificat.php';
     }
     
+    public function acteMariage(){
+        require_once 'views/admin/acteMariage.php';
+    }
+    
 }
 
 ?>

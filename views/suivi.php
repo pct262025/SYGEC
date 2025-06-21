@@ -24,9 +24,9 @@ $listDossierForSuivi = listDossierForSuivi($_SESSION["id"]);
 //     return "";
 // }
 
-function getAction($status, $dossierId, $typeActe){
+function getAction($status, $dossierId, $typeActe, $montant){
     if ($status == "En attente de paiement") {
-        return "<a href=\"#\" class=\"btn btn-warning faire-paiement\" dossier=\"".$dossierId."\" >
+        return "<a href=\"#\" class=\"btn btn-warning faire-paiement\" dossier=\"".$dossierId."\" montant=\"".$montant."\" >
                   Faire le paiement
                 </a>";
     }
@@ -107,7 +107,7 @@ require_once 'views/menu.php';
             <a href="">
                 <div class="card">
                     <div class="title">Demande de certificat de décés</div>
-                    <h1>0</h1>
+                    <h1> <?php echo nbrDossier($_SESSION["id"], 3); ?> </h1>
                     <i class="fas fa-arrow-right arrow"></i>
                 </div>
             </a>
@@ -136,8 +136,9 @@ if ( empty($listDossierForSuivi) ){
                     <tr class="bg-success ">
                         <th class="col"> <span class="btn text-white">Date de déclaration</span> </th>
                         <th class="col"> <span class="btn text-white">Type d’acte</span> </th>
+                        <th class="col"> <span class="btn text-white">Montant</span> </th>
                         <th class="col-1"> <span class="btn text-white">Nom</span> </th>
-                        <th class="col-3"> <span class="btn text-white">Prénom</span> </th>
+                        <th class="col-2"> <span class="btn text-white">Prénom</span> </th>
                         <th class="col"> <span class="btn text-white">Statut</span> </th>
                         <th class="col-2"> <span class="btn text-white">Action</span> </th>
                     </tr>
@@ -149,16 +150,17 @@ if ( empty($listDossierForSuivi) ){
     foreach ($listDossierForSuivi as $dossierForSuivi){
 ?>
                     <tr class="">
-                        <td class="col"> <span class="btn"> <?php echo $dossierForSuivi['date_demande'] != null ? $dossierForSuivi['date_demande'] : ""; ?> </span> </td>
+                        <td class="col"> <span class="btn"> <?php echo $dossierForSuivi['date_creation'] != null ? date('d/m/Y H:i:s', strtotime($dossierForSuivi['date_creation'])) : ""; ?> </span> </td>
                         <td class="col"> <span class="btn"> <?php echo $dossierForSuivi['libele'] != null ? $dossierForSuivi['libele'] : ""; ?> </span> </td>
+                        <td class="col"> <span class="btn"> <?php echo $dossierForSuivi['montant'] != null ? $dossierForSuivi['montant']." fr" : ""; ?> </span> </td>
                         <td class="col-1"> <span class="btn"> <?php echo $dossierForSuivi['nom'] != null ? $dossierForSuivi['nom'] : ""; ?> </span> </td>
-                        <td class="col-3"> <span class="btn"> <?php echo $dossierForSuivi['prenom'] != null ? $dossierForSuivi['prenom'] : ""; ?> </span> </td>
+                        <td class="col-2"> <span class="btn"> <?php echo $dossierForSuivi['prenom'] != null ? $dossierForSuivi['prenom'] : ""; ?> </span> </td>
                         <td class="col">
-                            <span class="btn  <?php echo $dossierForSuivi['statut'] == 'Annuler' ? 'bg-danger text-white' : 'bg-light'; ?> "> <?php echo $dossierForSuivi['statut'] != null ? $dossierForSuivi['statut'] : ""; ?> </span>
+                            <span class="btn  <?php echo $dossierForSuivi['statut'] == 'Rejeter' ? 'bg-danger text-white' : 'bg-light'; ?> "> <?php echo $dossierForSuivi['statut'] != null ? $dossierForSuivi['statut'] : ""; ?> </span>
                         </td>
                         <td class="col-2">
                             <?php // echo getAction($dossierForSuivi['statut'], $dossierForSuivi['id_demande']); ?>
-                            <?php echo getAction($dossierForSuivi['statut'], $dossierForSuivi['id_demande'], $dossierForSuivi['libele']); ?>
+                            <?php echo getAction($dossierForSuivi['statut'], $dossierForSuivi['id_demande'], $dossierForSuivi['libele'], $dossierForSuivi['montant']); ?>
                         </td>
                     </tr>
 <?php 
@@ -188,12 +190,14 @@ require_once "views/footer.php";
             event.preventDefault(); // Empêche la navigation immédiate
 
             const id_demande = this.getAttribute('dossier');
+            const montant = this.getAttribute('montant');
 
             const url = new URL(window.location.href);
             const params = new URLSearchParams(url.search);
             // Remplace ou ajoute 'action=login'
             params.set('action', 'paiement');
             params.set('id_demande', id_demande);
+            params.set('montant', montant);
             // Reconstruit l'URL avec les nouveaux paramètres
             url.search = params.toString();
             // Redirige vers la nouvelle URL

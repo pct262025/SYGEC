@@ -13,6 +13,7 @@ if ( isset($_POST['nom']) ) { // Cela veut dire que le formulaire a été valid�
     $datenaissance = isset($_POST['datenaissance']) ? $_POST['datenaissance'] : null;
     $email = isset($_POST['email']) ? $_POST['email'] : null;
     $profession = isset($_POST['profession']) ? $_POST['profession'] : null;
+    $genre = isset($_POST['genre']) ? $_POST['genre'] : null;
     
     $existingUser = findByLogin($login);
     if ( $existingUser != null ){
@@ -22,12 +23,12 @@ if ( isset($_POST['nom']) ) { // Cela veut dire que le formulaire a été valid�
         $textColor = "#721c24";
     }else{
 
-        save($nom, $prenoms, $contact, $login, $motdepasse, $nationalite, $datenaissance, $email, $profession);
+        save($nom, $prenoms, $contact, $login, $motdepasse, $nationalite, $datenaissance, $email, $profession, $genre);
         echo "<div class=\"popup\" id=\"popup\"> Citoyen enregisté avec success </div>";
         $color  = "#d4edda";
         $textColor = "#155724";
 
-        header("Refresh: 3; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=login");
+        header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=login");
     }
     
 
@@ -181,6 +182,14 @@ if ( isset($_POST['nom']) ) { // Cela veut dire que le formulaire a été valid�
                 <input type="password" id="motdepasse" name="motdepasse" class="form-control" required>
             </div>
             
+            <div class="form-group">
+                <label for="genre" class="form-label">Genre</label>
+                <select name="genre" id="genre" class="form-control" required>
+                    <option value="">Sélectionner...</option>
+                    <option value="homme">Homme</option>
+                    <option value="femme">Femme</option>
+                </select>
+            </div>
 
             <div class="form-group">
                 <label for="nationalite" class="form-label">Nationalité</label>

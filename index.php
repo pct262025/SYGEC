@@ -49,6 +49,13 @@ switch ($action) {
         $controller->cerificat();
         break;
 
+    // Ajout de la route pour télécharger le PDF
+    case 'acte-mariage':
+        require_once('controllers/AdminController.php');
+        $controller = new AdminController();
+        $controller->acteMariage();
+        break;
+
     case 'suivi':
         require_once('controllers/SuiviController.php');
         $controller = new SuiviController();
@@ -61,17 +68,23 @@ switch ($action) {
         $controller->demande();
         break;
 
-    // Ajout de la route pour télécharger le PDF
-    case 'telechargerPDF':
-        require_once('controllers/DemandeController.php');
-        $controller = new DemandeController();
-        $controller->telechargerCertificatNaissance(); // avant c’était telechargerPDF()
-        break;
     
     case 'telechargerCertificatNaissance':
         require_once('controllers/DemandeController.php');
         $controller = new DemandeController();
         $controller->telechargerPDF(); // avant c’était telechargerCertificatNaissance()
+        break;
+    
+    case 'acte-mariage':
+        require_once('controllers/DemandeController.php');
+        $controller = new DemandeController();
+        $controller->telechargerPDF(); // avant c’était telechargerCertificatNaissance()
+        break;
+    
+    case 'payement-par-qrcode':
+        require_once('controllers/PaiementController.php');
+        $controller = new PaiementController();
+        $controller->validerPaiement2(); // avant c’était telechargerCertificatNaissance()
         break;
 
 }

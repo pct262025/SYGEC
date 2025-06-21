@@ -4,6 +4,32 @@
     require_once 'models/DemandeActe.php';
     require_once 'models/Citoyen.php';
 
+    function saveImage ($file, $id_citoyen){
+
+        if ( $file['error'] === UPLOAD_ERR_OK ){
+            $fichierTemporaire = $file['tmp_name'];
+            $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $dossierCible = 'assets/img_dynamique/citoyen/'.$id_citoyen.'/';
+
+            // Crée le dossier s’il n’existe pas
+            if (!is_dir($dossierCible)) {
+                mkdir($dossierCible, 0777, true);
+            }
+
+            // Supprimer les anciennes versions (avec n’importe quelle extension)
+            // foreach (glob($dossierCible . "piece_jointe_.*") as $ancienFichier) {
+            //     unlink($ancienFichier);
+            // }
+
+            // Nouveau chemin avec le nom fixe
+            $cheminFinal = $dossierCible . "piece_jointe".round(microtime(true) * 1000).'_.' . $extension;
+
+            move_uploaded_file($fichierTemporaire, $cheminFinal);
+            
+            return $cheminFinal;
+        }
+    }
+
     // start si l'utilisateur n'est pas connecté, on le redirige vers la connexions
     if ( !isset($_SESSION["id"]) ){
         header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=login&retour=demande");
@@ -21,11 +47,25 @@
 
         }else{
 
+            date_default_timezone_set('Africa/Abidjan');
+
             $statut = 'En attente de validation';
-            $id_type_acte = $_POST["typeacte"] == "naissance" ? 1 : 2;
+            $typeacte_map = [
+                "naissance"  => 1,
+                "certificat" => 2
+            ];
+            $id_type_acte = isset($typeacte_map[$_POST["typeacte"]]) ? $typeacte_map[$_POST["typeacte"]] : 3;
             $id_citoyen = $_SESSION["id"];
 
-            creerUneDemande($statut, $id_type_acte, $id_citoyen);
+            $justificatif_path = null;
+            $current_date = date('Y-m-d H:i:s');
+            $nationalite = null;
+            $profession = null;
+            $numero_registre = null;
+            $deces_a = null;
+            $deces_le = null;
+
+            // creerUneDemande($statut, $id_type_acte, $id_citoyen);
 
             
             $nom = $_POST["nom"];
@@ -51,6 +91,45 @@
             $prenom_conjoint = isset($_POST["pnomcj"]) ? $_POST["pnomcj"] : null;
             $email = isset($_POST["email"]) ? $_POST["email"] : null;
             $contact = isset($_POST["telephone"]) ? $_POST["telephone"] : null;
+            $genre = isset($_POST["genre"]) ? $_POST["genre"] : null;
+
+            $lieu_naissance_conjoint = null;
+            $proffession_conjoint = null;
+            $lieu_habitation_conjoint = null;
+            $contact_conjoint = null;
+            $piece_jointe = null;
+
+            if ( isset($_FILES['piece_jointe']) ){
+                $piece_jointe = saveImage($_FILES['piece_jointe'], $id_citoyen);
+            }
+
+            if ( $id_type_acte === 3 ){
+
+                if ( $genre === 'homme' && isset($_POST["nomEpoux"]) ) { $nom = $_POST["nomEpoux"]; }elseif($genre === 'femme' && isset($_POST["nomEpouse"])){$nom = $_POST["nomEpouse"];}
+                if ( $genre === 'homme' && isset($_POST["prenomEpoux"]) ) { $prenom = $_POST["prenomEpoux"]; }elseif($genre === 'femme' && isset($_POST["prenomEpouse"])){$prenom = $_POST["prenomEpouse"];}
+                if ( $genre === 'homme' && isset($_POST["lieuNaissEpoux"]) ) { $lieu_naissance = $_POST["lieuNaissEpoux"]; }elseif($genre === 'femme' && isset($_POST["lieuNaissEpouse"])){$lieu_naissance = $_POST["lieuNaissEpouse"];}
+                if ( $genre === 'homme' && isset($_POST["jobEpoux"]) ) { $profession = $_POST["jobEpoux"]; }elseif($genre === 'femme' && isset($_POST["jobEpouse"])){$profession = $_POST["jobEpouse"];}
+                if ( $genre === 'homme' && isset($_POST["domicileEpoux"]) ) { $lieu_habitation = $_POST["domicileEpoux"]; }elseif($genre === 'femme' && isset($_POST["domicileEpouse"])){$lieu_habitation = $_POST["domicileEpouse"];}
+                if ( $genre === 'homme' && isset($_POST["telEpoux"]) ) { $contact = $_POST["telEpoux"]; }elseif($genre === 'femme' && isset($_POST["telEpouse"])){$contact = $_POST["telEpouse"];}
+
+                
+                if ( $genre !== 'homme' && isset($_POST["nomEpoux"]) ) { $nom_conjoint = $_POST["nomEpoux"]; }elseif($genre !== 'femme' && isset($_POST["nomEpouse"])){$nom_conjoint = $_POST["nomEpouse"];}
+                if ( $genre !== 'homme' && isset($_POST["prenomEpoux"]) ) { $prenom_conjoint = $_POST["prenomEpoux"]; }elseif($genre !== 'femme' && isset($_POST["prenomEpouse"])){$prenom_conjoint = $_POST["prenomEpouse"];}
+                if ( $genre !== 'homme' && isset($_POST["lieuNaissEpoux"]) ) { $lieu_naissance_conjoint = $_POST["lieuNaissEpoux"]; }elseif($genre !== 'femme' && isset($_POST["lieuNaissEpouse"])){$lieu_naissance_conjoint = $_POST["lieuNaissEpouse"];}
+                if ( $genre !== 'homme' && isset($_POST["jobEpoux"]) ) { $proffession_conjoint = $_POST["jobEpoux"]; }elseif($genre !== 'femme' && isset($_POST["jobEpouse"])){$proffession_conjoint = $_POST["jobEpouse"];}
+                if ( $genre !== 'homme' && isset($_POST["domicileEpoux"]) ) { $lieu_habitation_conjoint = $_POST["domicileEpoux"]; }elseif($genre !== 'femme' && isset($_POST["domicileEpouse"])){$lieu_habitation_conjoint = $_POST["domicileEpouse"];}
+                if ( $genre !== 'homme' && isset($_POST["telEpoux"]) ) { $contact_conjoint = $_POST["telEpoux"]; }elseif($genre !== 'femme' && isset($_POST["telEpouse"])){$contact_conjoint = $_POST["telEpouse"];}
+
+                if ( isset($_POST["dateMariageMariage"]) ) { $marie_le = $_POST["dateMariageMariage"]; }
+                if ( isset($_POST["lieuMariageMariage"]) ) { $marie_a = $_POST["lieuMariageMariage"]; }
+
+            }
+
+            creerUneDemande2($statut, $justificatif_path, $id_type_acte, $id_citoyen, $current_date, 
+            $nom, $prenom, $lieu_naissance, $date_naissance, $heure_naissance, $contact, $nationalite, $email, $profession, 
+            $numero_registre, $marie_a, $marie_le, $divorce_le, $deces_a, $deces_le, $nom_pere, $prenom_pere, $proffession_pere, 
+            $date_naissance_pere, $lieu_naissance_pere, $nom_mere, $prenom_mere, $proffession_mere, $date_naissance_mere, 
+            $lieu_naissance_mere, $nom_conjoint, $prenom_conjoint, $lieu_habitation, $lieu_naissance_conjoint, $proffession_conjoint, $lieu_habitation_conjoint, $contact_conjoint, $piece_jointe);
 
             updateWithDemandeInfo(
                 $nom,
@@ -76,8 +155,12 @@
                 $prenom_conjoint,
                 $email,
                 $contact,
+                $id_citoyen,
 
-                $id_citoyen
+                $lieu_naissance_conjoint,
+                $proffession_conjoint,
+                $lieu_habitation_conjoint,
+                $contact_conjoint
             );
 
             // Afficher le message de reussite
@@ -144,7 +227,7 @@ require_once 'views/menu.php';
 <!-- end menu -->
     <div class="body">
         <div class="form-container-dem">
-           <form id="multiStepForm" method="post" action="#">
+           <form id="multiStepForm" method="post" action="#" enctype="multipart/form-data">
             <div class="progress-bar1">
                 <div class="step active">1</div>
                 <div class="step">2</div>
@@ -152,6 +235,8 @@ require_once 'views/menu.php';
                 <div class="step">4</div>
                 <div class="step">5</div>
             </div>
+
+            <input type="hidden", name="genre", id="genre" />
 
             <!-- Étape 1 -->
             <div class="form-step active">
@@ -387,7 +472,7 @@ require_once 'views/menu.php';
                     </div>
                     <div class="form-group" style="flex: 1 1 100%;">
                         <label id='labeldoc'>Joindre un document PDF</label>
-                        <input type="file" id="documentPDF" accept="application/pdf" />
+                        <input type="file" id="documentPDF" name="piece_jointe" accept="application/pdf" />
                     </div>
                 </div>
                 <div class="btns">
@@ -493,14 +578,14 @@ require_once 'views/menu.php';
 
             // Required
             champRequis("lieuhabitat", !isNaissance);
-            champRequis("datenaissp", !isNaissance);
-            champRequis("datenaissm", !isNaissance);
+            // champRequis("datenaissp", !isNaissance);
+            // champRequis("datenaissm", !isNaissance);
             champRequis("lieunaissance", isNaissance);
             champRequis("jobpere", isNaissance);
             champRequis("jobmere", isNaissance);
-            champRequis("datemariage", isNaissance);
-            champRequis("lieumariage", isNaissance);
-            champRequis("datedivorce", isNaissance);
+            // champRequis("datemariage", isNaissance);
+            // champRequis("lieumariage", isNaissance);
+            // champRequis("datedivorce", isNaissance);
             champRequis("nomcj", isNaissance);
             champRequis("pnomcj", isNaissance);
 
@@ -624,36 +709,58 @@ require_once 'views/menu.php';
                 document.getElementById('nom').value = data.nom || '';
                 document.getElementById('prenom').value = data.prenom || '';
                 document.getElementById('lieuNaissance').value = data.lieu_naissance || '';
-                document.getElementById('dateNaissance').value = data.date_naissance.split(' ')[0] || '';
+                document.getElementById('dateNaissance').value = data.date_naissance == null ? '' : data.date_naissance.split(' ')[0] || '';
                 document.getElementById('heurNaissance').value = data.heure_naissance || '';
                 document.getElementById('lieuhabitat').value = data.lieu_habitation || '';
                 document.getElementById('nompere').value = data.nom_pere || '';
                 document.getElementById('pnompere').value = data.prenom_pere || '';
-                document.getElementById('datenaissp').value = data.date_naissance_pere.split(' ')[0] || '';
+                document.getElementById('datenaissp').value = data.date_naissance_pere == null ? '' : data.date_naissance_pere.split(' ')[0] || '';
                 document.getElementById('lieunaissp').value = data.lieu_naissance_pere || '';
                 document.getElementById('jobpere').value = data.proffession_pere || '';
                 document.getElementById('nommere').value = data.nom_mere || '';
                 document.getElementById('pnommere').value = data.prenom_mere || '';
-                document.getElementById('datenaissm').value = data.date_naissance_mere.split(' ')[0] || '';
+                document.getElementById('datenaissm').value = data.date_naissance_mere === null ? '' : data.date_naissance_mere.split(' ')[0] || '';
                 document.getElementById('lieunaissm').value = data.lieu_naissance_mere || '';
                 document.getElementById('jobmere').value = data.proffession_mere || '';
-                document.getElementById('datemariage').value = data.marie_le.split(' ')[0] || '';
+                document.getElementById('datemariage').value = data.marie_le == null ? '' : data.marie_le.split(' ')[0] || '';
                 document.getElementById('lieumariage').value = data.marie_a || '';
-                document.getElementById('datedivorce').value = data.divorce_le.split(' ')[0] || '';
+                document.getElementById('datedivorce').value = data.divorce_le == null ? '' : data.divorce_le.split(' ')[0] || '';
                 document.getElementById('nomcj').value = data.nom_conjoint || '';
                 document.getElementById('pnomcj').value = data.prenom_conjoint || '';
                 document.getElementById('email').value = data.email || '';
                 document.getElementById('telephone').value = data.contact || '';
+                document.getElementById('genre').value = data.genre || '';
 
-                // Formater la date (datetime vers jj/mm/aaaa)
-                if (data.date_naissance) {
-                document.getElementById('date_naissance').value = formatDateToFr(data.date_naissance);
-                }
+                // // Formater la date (datetime vers jj/mm/aaaa)
+                // if (data.date_naissance) {
+                // document.getElementById('dateNaissance').value = formatDateToFr(data.date_naissance);
+                // }
 
-                // Heure au format hh:mm:ss → directement utilisable pour <input type="time">
-                if (data.heure_rdv) {
-                document.getElementById('heure_rdv').value = data.heure_rdv;
-                }
+                // // Heure au format hh:mm:ss → directement utilisable pour <input type="time">
+                // if (data.heure_rdv) {
+                // document.getElementById('heure_rdv').value = data.heure_rdv;
+                // }
+
+                console.log();
+
+                document.getElementById('nomEpoux').value = ( data.genre === 'homme' ) ? data.nom || '' : data.nom_conjoint || '';
+                document.getElementById('prenomEpoux').value = ( data.genre === 'homme' ) ? data.prenom || '' : data.prenom_conjoint || '';
+                document.getElementById('lieuNaissEpoux').value = ( data.genre === 'homme' ) ? data.lieu_naissance || '' : data.lieu_naissance_conjoint || '';
+                document.getElementById('jobEpoux').value = ( data.genre === 'homme' ) ? data.profession || '' : data.proffession_conjoint || '';
+                document.getElementById('domicileEpoux').value = ( data.genre === 'homme' ) ? data.lieu_habitation || '' : data.lieu_habitation_conjoint || '';
+                document.getElementById('telEpoux').value = ( data.genre === 'homme' ) ? data.contact || '' : data.contact_conjoint || '';
+
+                document.getElementById('nomEpouse').value = ( data.genre !== 'homme' ) ? data.nom || '' : data.nom_conjoint || '';
+                document.getElementById('prenomEpouse').value = ( data.genre !== 'homme' ) ? data.prenom || '' : data.prenom_conjoint || '';
+                document.getElementById('lieuNaissEpouse').value = ( data.genre !== 'homme' ) ? data.lieu_naissance || '' : data.lieu_naissance_conjoint || '';
+                document.getElementById('jobEpouse').value = ( data.genre !== 'homme' ) ? data.profession || '' : data.proffession_conjoint || '';
+                document.getElementById('domicileEpouse').value = ( data.genre !== 'homme' ) ? data.lieu_habitation || '' : data.lieu_habitation_conjoint || '';
+                document.getElementById('telEpouse').value = ( data.genre !== 'homme' ) ? data.contact || '' : data.contact_conjoint || '';
+                
+                
+                document.getElementById('dateMariageMariage').value = data.marie_le == null ? '' : data.marie_le.split(' ')[0] || '';
+                document.getElementById('lieuMariageMariage').value = data.marie_a || '';
+
             })
             .catch(error => console.error('Erreur:', error));
         // });

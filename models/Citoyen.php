@@ -12,10 +12,10 @@ function findByLogin ($login){
     return $stmt->fetch();
 }
 
-function save($nom, $prenoms, $contact, $login, $motdepasse, $nationalite, $datenaissance, $email, $profession){
+function save($nom, $prenoms, $contact, $login, $motdepasse, $nationalite, $datenaissance, $email, $profession, $genre){
 
-    $sql = "insert into citoyen (nom, prenom, contact, login, mot_de_passe, nationalite, date_naissance, email, profession)
-            values (:nom, :prenom, :contact, :login, :mot_de_passe, :nationalite, :date_naissance, :email, :profession) ";
+    $sql = "insert into citoyen (nom, prenom, contact, login, mot_de_passe, nationalite, date_naissance, email, profession, genre)
+            values (:nom, :prenom, :contact, :login, :mot_de_passe, :nationalite, :date_naissance, :email, :profession, :genre) ";
 
     $stmt = Database::getConnection()->prepare($sql);
     $stmt->bindParam(":nom", $nom);
@@ -27,12 +27,13 @@ function save($nom, $prenoms, $contact, $login, $motdepasse, $nationalite, $date
     $stmt->bindParam(":date_naissance", $datenaissance);
     $stmt->bindParam(":email", $email);
     $stmt->bindParam(":profession", $profession);
+    $stmt->bindParam(":genre", $genre);
     $stmt->execute();
     // return $stmt->fetch();
 
 }
 
-function updateWithDemandeInfo ($nom, $prenom, $lieu_naissance, $date_naissance, $heure_naissance, $lieu_habitation, $nom_pere, $prenom_pere, $date_naissance_pere, $lieu_naissance_pere, $proffession_pere, $nom_mere, $prenom_mere, $date_naissance_mere, $lieu_naissance_mere, $proffession_mere, $marie_le, $marie_a, $divorce_le, $nom_conjoint, $prenom_conjoint, $email, $contact,     $id_citoyen){
+function updateWithDemandeInfo ($nom, $prenom, $lieu_naissance, $date_naissance, $heure_naissance, $lieu_habitation, $nom_pere, $prenom_pere, $date_naissance_pere, $lieu_naissance_pere, $proffession_pere, $nom_mere, $prenom_mere, $date_naissance_mere, $lieu_naissance_mere, $proffession_mere, $marie_le, $marie_a, $divorce_le, $nom_conjoint, $prenom_conjoint, $email, $contact, $id_citoyen, $lieu_naissance_conjoint, $proffession_conjoint, $lieu_habitation_conjoint, $contact_conjoint){
     $sql = "UPDATE citoyen
             SET 
             nom=:nom, 
@@ -57,7 +58,11 @@ function updateWithDemandeInfo ($nom, $prenom, $lieu_naissance, $date_naissance,
             nom_conjoint=:nom_conjoint, 
             prenom_conjoint=:prenom_conjoint, 
             email=:email, 
-            contact=:contact
+            contact=:contact,
+            lieu_naissance_conjoint=:lieu_naissance_conjoint,
+            proffession_conjoint=:proffession_conjoint,
+            lieu_habitation_conjoint=:lieu_habitation_conjoint,
+            contact_conjoint=:contact_conjoint
             WHERE id_citoyen=:id_citoyen ";
 
     $stmt = Database::getConnection()->prepare($sql);
@@ -85,6 +90,12 @@ function updateWithDemandeInfo ($nom, $prenom, $lieu_naissance, $date_naissance,
     $stmt->bindParam(":email", $email);
     $stmt->bindParam(":contact", $contact);
     $stmt->bindParam(":id_citoyen", $id_citoyen);
+    
+    $stmt->bindParam(":lieu_naissance_conjoint", $lieu_naissance_conjoint);
+    $stmt->bindParam(":proffession_conjoint", $proffession_conjoint);
+    $stmt->bindParam(":lieu_habitation_conjoint", $lieu_habitation_conjoint);
+    $stmt->bindParam(":contact_conjoint", $contact_conjoint);
+
     $stmt->execute();
 }
 
