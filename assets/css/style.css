@@ -192,7 +192,7 @@ body {
       rgba(0, 0, 0, 0.6),
       rgba(0, 0, 0, 0.6)
     ),
-    url("assets/img/basilique.jpg");
+    url("../img/basilique.jpg");
   background-size: cover;
   background-position: center;
   height: 25rem;
