@@ -5,7 +5,7 @@ session_start();
 require_once "models/DemandeActe.php";
 
 $countByTypeActe = [];
-if ( isset( $_SESSION["id_role"] ) && isset( $_SESSION["id"] ) && $_SESSION["id_role"] = 1 ){
+if ( isset( $_SESSION["id_role"] ) && isset( $_SESSION["id"] ) && $_SESSION["id_role"] !== 1 ){
     $countByTypeActe = countByTypeActeAvecUtilisateur($_SESSION["id_role"]);
 } else{
     

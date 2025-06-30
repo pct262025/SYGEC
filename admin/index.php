@@ -24,6 +24,9 @@ if ( isset($_POST['login']) ){
 
     // verifier que le login existe
     $existingUser = findByLogin($login);
+
+    
+
     if ( $existingUser == null ){
         // Gerer un message d'erreur ici
         echo "<div class=\"popup\" id=\"popup\"> le login $login n'existe pas </div>";

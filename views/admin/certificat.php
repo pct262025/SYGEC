@@ -105,14 +105,16 @@ require_once 'views/menu.php';
                 <a href="#" id="demandes-menu-certification-nationalite" class="col-11 offset-1 menu-item orange annuler-text-decoration annuler-heritage-color-hover certificat">Certificat de Nationalité</a>
                 <a href="#" id="demandes-menu-actes-mariage" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover acte-mariage">Actes de mariage</a>
             </div>
+            <?php if ( $_SESSION["id_role"] == 1 ){ ?>
             <div class="row">
                 <div id="users" class="fw-bold menu-principal col-12 menu-item ">
                     <span id="users-toggle-icon" class="icon">−</span> Gestion des utilisateurs
                 </div>
                 <a href="#" id="users-menu-utilisateur" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover utilisateur">Utilisateurs</a>
-                <a href="#" id="users-menu-role" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover">Roles</a>
-                <a href="#" id="users-menu-actions" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover">Actions</a>
+                <a href="#" id="users-menu-role" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover role">Roles</a>
+                <!-- <a href="#" id="users-menu-actions" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover">Actions</a> -->
             </div>
+            <?php } ?>
 
         </div>
         <!-- edn sous-menu-admin -->
@@ -340,7 +342,7 @@ if ( $detail == false ){
             document.getElementById('users-toggle-icon'),
             document.getElementById('users-menu-utilisateur'),
             document.getElementById('users-menu-role'),
-            document.getElementById('users-menu-actions'),
+            // document.getElementById('users-menu-actions'),
         ];
 
         let allList = [firstList, secondeList];
@@ -349,18 +351,30 @@ if ( $detail == false ){
             // Par défaut, on cache tous les sous-menus sauf ceux du premier bloc (demandes)
             let isMenuVisible = listItem === firstList;
 
-            listItem[1].textContent = isMenuVisible ? '−' : '+';
-            for (let i = 2; i < listItem.length; i++) {
-                listItem[i].style.display = isMenuVisible ? 'block' : 'none';
-            }
-
-            listItem[0].addEventListener('click', () => {
-                isMenuVisible = !isMenuVisible;
+            if ( listItem[1] != null ){
                 listItem[1].textContent = isMenuVisible ? '−' : '+';
-                for (let i = 2; i < listItem.length; i++) {
+            }
+            
+            for (let i = 2; i < listItem.length; i++) {
+                if ( listItem[i] != null ){
                     listItem[i].style.display = isMenuVisible ? 'block' : 'none';
                 }
-            });
+            }
+
+            if ( listItem[0] != null ){
+                listItem[0].addEventListener('click', () => {
+                    isMenuVisible = !isMenuVisible;
+                    if ( listItem[1] != null ){
+                        listItem[1].textContent = isMenuVisible ? '−' : '+';
+                    }
+                    for (let i = 2; i < listItem.length; i++) {
+                        if ( listItem[i] != null ){
+                            listItem[i].style.display = isMenuVisible ? 'block' : 'none';
+                        }
+                    }
+                });
+            }
+            
         }
 
 
@@ -405,6 +419,15 @@ if ( $detail == false ){
             const url = new URL(window.location.href);
             const params = new URLSearchParams(url.search);
             params.set('action', 'utilisateur');
+            url.search = params.toString();
+            window.location.href = url.toString();
+        });
+        
+        document.querySelector('.role').addEventListener('click', function(event) {
+            event.preventDefault(); // Empêche la navigation immédiate
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            params.set('action', 'role');
             url.search = params.toString();
             window.location.href = url.toString();
         });

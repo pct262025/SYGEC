@@ -1,7 +1,6 @@
 
 <?php 
 session_start();
-require_once 'models/Utilisateur.php';
 require_once 'models/Role.php';
 require_once 'utils/sendMail.php';
 
@@ -33,33 +32,20 @@ function genererMotDePasse($longueur = 8) {
 
 function creer(){
     
-    $nom = isset( $_POST['nom'] ) ? $_POST['nom'] : null;
-    $prenom = isset( $_POST['prenom'] ) ? $_POST['prenom'] : null;
-    $login = isset( $_POST['login'] ) ? $_POST['login'] : null;
-    $email = isset( $_POST['email'] ) ? $_POST['email'] : null;
-    $id_role = isset( $_POST['id_role'] ) ? $_POST['id_role'] : null;
+    $libelle = isset( $_POST['libelle'] ) ? $_POST['libelle'] : null;
 
-    $mot_de_passe = genererMotDePasse();
-    $final_mot_de_passe = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+    creerRole($libelle);
 
-    creerUtilisateur($nom, $prenom, $login, $email, $final_mot_de_passe, $id_role);
-    
-    sendPassword("{$nom} {$prenom}", $mot_de_passe, $email);
-
-    header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=utilisateur");
+    header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=role");
 }
 
 function update(){
     
-    $nom = isset( $_POST['nom'] ) ? $_POST['nom'] : null;
-    $prenom = isset( $_POST['prenom'] ) ? $_POST['prenom'] : null;
-    $login = isset( $_POST['login'] ) ? $_POST['login'] : null;
-    $email = isset( $_POST['email'] ) ? $_POST['email'] : null;
+    $libelle = isset( $_POST['libelle'] ) ? $_POST['libelle'] : null;
     $id_role = isset( $_POST['id_role'] ) ? $_POST['id_role'] : null;
-    $id_utilisateur = isset( $_POST['id_utilisateur'] ) ? $_POST['id_utilisateur'] : null;
 
-    updateUtilisateur($nom, $prenom, $login, $email, $id_role, $id_utilisateur);
-    header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=utilisateur");
+    updateRole($libelle, $id_role);
+    header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=role");
 }
 
 if ( isset($_POST['action']) ){
@@ -71,21 +57,21 @@ if ( isset($_POST['action']) ){
 }
 if ( isset($_GET["supprimer"]) && isset($_GET["id"]) ){
     var_dump($_GET);
-    deleteUtilisateur($_GET["id"]);
-    header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=utilisateur");
+    deleteRole($_GET["id"]);
+    header("Refresh: 0; url=" . strtok($_SERVER["PHP_SELF"], '?') . "?action=role");
 }
 
-if ( isset($_GET['valider'])  ){
-    validerDemande($_GET['valider']);
+// if ( isset($_GET['valider'])  ){
+//     validerDemande($_GET['valider']);
     
-    redirectAfterDeleteParam('valider');
-}
-if ( isset($_GET['annuler'])  ){
-    annulerDemande($_GET['annuler']);
+//     redirectAfterDeleteParam('valider');
+// }
+// if ( isset($_GET['annuler'])  ){
+//     annulerDemande($_GET['annuler']);
 
 
-    redirectAfterDeleteParam('annuler');
-}
+//     redirectAfterDeleteParam('annuler');
+// }
 
 ?>
 
@@ -145,8 +131,8 @@ require_once 'views/menu.php';
                 <div id="users" class="fw-bold menu-principal col-12 menu-item ">
                     <span id="users-toggle-icon" class="icon">−</span> Gestion des utilisateurs
                 </div>
-                <a href="#" id="users-menu-utilisateur" class="col-11 offset-1 orange menu-item annuler-text-decoration annuler-heritage-color-hover utilisateur">Utilisateurs</a>
-                <a href="#" id="users-menu-role" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover role">Roles</a>
+                <a href="#" id="users-menu-utilisateur" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover utilisateur">Utilisateurs</a>
+                <a href="#" id="users-menu-role" class="col-11 offset-1  orange menu-item annuler-text-decoration annuler-heritage-color-hover role">Roles</a>
                 <!-- <a href="#" id="users-menu-actions" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover">Actions</a> -->
             </div>
             <?php } ?>
@@ -163,52 +149,22 @@ require_once 'views/menu.php';
 $detail = false;
 if ( isset($_GET["for"]) ) { 
     $detail = true;
-    $info_utilisateur = isset($_GET['id']) ? unUtilisateur($_GET['id']) : [];
-    if ( $info_utilisateur !== null ){
+    $info_role = isset($_GET['id']) ? unRole($_GET['id']) : [];
+    if ( $info_role !== null ){
 ?>
 <div class="row ">
     
     <hr>
     <form method="POST" action="#" class="col-8 offset-2 ombre min-height-40vh bg-white mt-5 mb-5 p-3 ">
-        <h4 class="mb-0 mt-3"><?php echo isset($_GET['id']) ? "Modifier" : "Créer"; ?> un utilisateur</h4>
+        <h4 class="mb-0 mt-3"><?php echo isset($_GET['id']) ? "Modifier" : "Créer"; ?> un role</h4>
         <hr>
 
 
-        <label for="nom">Nom</label> <span class="asterisk-rouge">*</span>
-        <input class="form-control mt-1 mb-3" name="nom" type="text" placeholder="Le nom" required value="<?php echo isset($info_utilisateur['nom']) ? $info_utilisateur['nom'] : ""; ?>" >
-    
-        <label for="prenom">Prénoms</label> <span class="asterisk-rouge">*</span>
-        <input class="form-control mt-1 mb-3" name="prenom" type="text" placeholder="Les prénoms" required value="<?php echo isset($info_utilisateur['prenom']) ? $info_utilisateur['prenom'] : ""; ?>" >
-    
-        <label for="login">Login</label> <span class="asterisk-rouge">*</span>
-        <input class="form-control mt-1 mb-3" name="login" type="text" placeholder="Le login" required value="<?php echo isset($info_utilisateur['login']) ? $info_utilisateur['login'] : ""; ?>" >
-    
-        <label for="email">Email</label> <span class="asterisk-rouge">*</span>
-        <input class="form-control mt-1 mb-3" name="email" type="text" placeholder="Le email" required value="<?php echo isset($info_utilisateur['email']) ? $info_utilisateur['email'] : ""; ?>" >
-    
-        <label for="id_role">Role</label> <span class="asterisk-rouge">*</span>
-        <select class="form-control" id="id_role" name="id_role" required value="<?php echo isset($info_utilisateur['id_role']) ? $info_utilisateur['id_role'] : ""; ?>" >
-            <option <?php echo !isset($info_utilisateur['id_role']) ? "selected" : "" ?> >Choisir...</option>
-
-            <?php 
-                $roles = listRoles();
-                if ( !empty($roles) ){
-                    foreach($roles as $role){
-                        ?>
-                        
-            <option value="<?php echo $role["id_role"]; ?>" <?php echo isset($info_utilisateur['id_role']) && $info_utilisateur['id_role'] == $role["id_role"] ? "selected" : "" ?> ><?php echo $role["libelle"]; ?></option>    
-
-                        <?php
-                    }
-                }
-            ?>
-            <!-- <option value="2" <?php echo isset($info_utilisateur['id_role']) && $info_utilisateur['id_role'] == 2 ? "selected" : "" ?> >AGENT</option>
-            <option value="1" <?php echo isset($info_utilisateur['id_role']) && $info_utilisateur['id_role'] == 1 ? "selected" : "" ?> >ADMIN</option> -->
-        </select>
+        <label for="libelle">libelle</label> <span class="asterisk-rouge">*</span>
+        <input class="form-control mt-1 mb-3" name="libelle" type="text" placeholder="Le libelle" required value="<?php echo isset($info_role['libelle']) ? $info_role['libelle'] : ""; ?>" >
 
         <input type="hidden" name="action" value="<?php echo isset($_GET['id']) ? "modifier" : "creer" ?>" />
-        <input type="hidden" name="id_utilisateur" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null ?>" />
-        
+        <input type="hidden" name="id_role" value="<?php echo isset($_GET['id']) ? $_GET['id'] : null ?>" />
 
         <div class="mt-5 text-end">
             <!-- <span type="button" class="btn btn-secondary ferme-modal " >Annuler</span> -->
@@ -226,12 +182,12 @@ if ( $detail == false ){
 ?> 
         <div class="row mt-5">
             <div class="offset-10 col">
-                <span class="creer-one-utilisateur btn btn-dark ">Créer un utilisateur</span>
+                <span class="creer-one-role btn btn-dark ">Créer un role</span>
             </div>
         </div>
 <?php
-    $all_utilisateur = listUtilisateurs();
-    if ( empty($all_utilisateur) ){
+    $all_role = listRoles();
+    if ( empty($all_role) ){
     ?>
     
     <div class="row">
@@ -247,26 +203,23 @@ if ( $detail == false ){
                     <table class="table mt-3">
                         <thead class="table-success">
                             <tr>
-                                <th scope="col">Identifiant utilisateur</th>
-                                <th scope="col">nom </th>
-                                <th scope="col">Prénom(s)</th>
-                                <!-- <th scope="col-2">status</th> -->
+                                <th scope="col">Identifiant role</th>
+                                <th scope="col">libelle </th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-<?php foreach($all_utilisateur as $utilisateur){
+<?php foreach($all_role as $role){
         
      ?>
                             <tr>
-                                <td class="col-3"> <?php echo $utilisateur['id_utilisateur'] != null ? $utilisateur['id_utilisateur'] : '---Néant---'; ?> </th>
-                                <td class="col"> <?php echo $utilisateur['nom'] != null ? $utilisateur['nom'] : '---Néant---'; ?> </td>
-                                <td class="col"> <?php echo $utilisateur['prenom'] != null ? $utilisateur['prenom'] : '---Néant---'; ?> </td>
+                                <td class="col-5"> <?php echo $role['id_role'] != null ? $role['id_role'] : '---Néant---'; ?> </th>
+                                <td class="col"> <?php echo $role['libelle'] != null ? $role['libelle'] : '---Néant---'; ?> </td>
                                 <td class="col-2 justify-content-center "> 
                                     <div class="d-flex justify-content-center">
                                         <a class="annuler-text-decoration" href="#" >
-                                            <span class="delete-one-utilisateur btn btn-danger btn-sm" data-id="<?php echo $utilisateur['id_utilisateur']; ?>" >Supprimer</span>
-                                            <span class="one-utilisateur btn btn-primary btn-sm" data-id="<?php echo $utilisateur['id_utilisateur']; ?>" >modifier</span>
+                                            <span class="delete-one-role btn btn-danger btn-sm" data-id="<?php echo $role['id_role']; ?>" >Supprimer</span>
+                                            <span class="one-role btn btn-primary btn-sm" data-id="<?php echo $role['id_role']; ?>" >modifier</span>
                                         </a>
                                     </div>  
                                 </td>
@@ -406,18 +359,18 @@ if ( $detail == false ){
 
 
 
-        Array.from( document.getElementsByClassName('one-utilisateur') ).forEach (element => {
+        Array.from( document.getElementsByClassName('one-role') ).forEach (element => {
             element.addEventListener('click', function(event) {
                 const id = this.getAttribute('data-id'); // récupère l'id dynamique
                 const url = new URL(window.location.href);
                 const params = new URLSearchParams(url.search);
-                params.set('id', id); // définit le nouveau paramètre 'id'
-                params.set('for', 1); // définit le nouveau paramètre 'for'
+                params.set('id', id); 
+                params.set('for', 1); 
                 url.search = params.toString();
                 window.location.href = url.toString(); 
             });
         });
-        Array.from( document.getElementsByClassName('creer-one-utilisateur') ).forEach (element => {
+        Array.from( document.getElementsByClassName('creer-one-role') ).forEach (element => {
             element.addEventListener('click', function(event) {
                 const url = new URL(window.location.href);
                 const params = new URLSearchParams(url.search);
@@ -478,7 +431,7 @@ if ( $detail == false ){
             });
         }
 
-        Array.from( document.getElementsByClassName('delete-one-utilisateur') ).forEach (element => {
+        Array.from( document.getElementsByClassName('delete-one-role') ).forEach (element => {
             element.addEventListener('click', function(event) {
                 event.preventDefault(); 
                 const id = this.getAttribute('data-id');

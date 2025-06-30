@@ -98,5 +98,11 @@ switch ($action) {
         $controller = new Dashboard();
         $controller->dashboard();
         break;
+    
+    case 'role':
+        require_once('controllers/AdminController.php');
+        $controller = new AdminController();
+        $controller->role();
+        break;
 
 }

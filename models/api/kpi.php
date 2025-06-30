@@ -8,7 +8,7 @@ $sql1="select
         statut.statut as name,
         count( demande_acte.id_demande ) as y
     from (
-        select distinct demande_acte.statut from demande_acte
+        select distinct statut.libelle as statut from statut
     ) as statut
     left join demande_acte on ( demande_acte.statut = statut.statut and demande_acte.id_type_acte = :id_type_acte )
     group by statut.statut;";
@@ -17,7 +17,7 @@ $sql2="select
         statut.statut as name,
         count( demande_acte.id_demande ) as y
     from (
-        select distinct demande_acte.statut from demande_acte
+        select distinct statut.libelle as statut from statut 
     ) as statut
     left join demande_acte on ( demande_acte.statut = statut.statut and demande_acte.id_type_acte = :id_type_acte and demande_acte.id_agent = :id_agent )
     group by statut.statut;";
