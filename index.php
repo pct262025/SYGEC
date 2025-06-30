@@ -86,5 +86,23 @@ switch ($action) {
         $controller = new PaiementController();
         $controller->validerPaiement2(); // avant c’était telechargerCertificatNaissance()
         break;
+    
+    case 'utilisateur':
+        require_once('controllers/AdminController.php');
+        $controller = new AdminController();
+        $controller->utilisateur();
+        break;
+    
+    case 'dashboard':
+        require_once('controllers/Dashboard.php');
+        $controller = new Dashboard();
+        $controller->dashboard();
+        break;
+    
+    case 'role':
+        require_once('controllers/AdminController.php');
+        $controller = new AdminController();
+        $controller->role();
+        break;
 
 }

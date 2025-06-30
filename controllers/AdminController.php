@@ -16,6 +16,14 @@ class AdminController{
         require_once 'views/admin/acteMariage.php';
     }
     
+    public function utilisateur(){
+        require_once 'views/admin/utilisateur.php';
+    }
+    
+    public function role(){
+        require_once 'views/admin/role.php';
+    }
+    
 }
 
 ?>
