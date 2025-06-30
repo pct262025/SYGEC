@@ -1,4 +1,10 @@
 
+<?php 
+
+$admin = isset( $_SESSION['id_role'] ) ? true : false;
+
+?>
+
 
 <header class="header">
     <nav class="nav n1">
@@ -7,15 +13,20 @@
         </div>
 
         <ul>
-            <li><a class="accueil" href="#?action=accueil">Acceuil</a></li>
-            <li><a href="#" class="demande">Demande d'Actes</a></li>
-            <!-- <li><a href="#">Declaration d'Actes</a></li> -->
-            <li><a href="#" class="suivi">Suivi</a></li>
-            <!-- <li>
-                <a href="#?action=paiement" class="paiement">Paiement</a>
-            </li> -->
-            <li><a href="#">Contacts</a></li>
-            <li><a class="traiterDemande" href="#?action=traiterDemande">Administration</a></li>
+            <?php if ( $admin ) { ?>
+                <li><a class="dashboard" href="#">Dashboard</a></li>
+                <li><a href="#">Contacts</a></li>
+                <li><a class="traiterDemande" href="#?action=traiterDemande">Administration</a></li>
+            <?php } ?>
+
+            
+            <?php if ( !$admin ) { ?>
+                <li><a class="accueil" href="#?action=accueil">Acceuil</a></li>
+                <li><a href="#" class="demande">Demande d'Actes</a></li>
+                <li><a href="#" class="suivi">Suivi</a></li>
+                <li><a href="#">Contacts</a></li>
+            <?php } ?>
+            
         </ul>
         <div class="user">
 <?php  ?> 
@@ -27,7 +38,7 @@ if ( isset($_SESSION['nom']) ){
 ?> 
                 <a href="#" class="deconnexion">Deconnexion</a>
 <?php
-    }else{
+    }else if (!$admin){
 ?>
                 <a href="#" class="connect">Connexion</a>
                 <a href="#" class="inscript">Inscription</a>
@@ -116,53 +127,76 @@ if ( document.querySelector('.paiement') != null ){
     });
 }
 
-document.querySelector('.traiterDemande').addEventListener('click', function(event) {
-    event.preventDefault(); // Empêche la navigation immédiate
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    // Remplace ou ajoute 'action=login'
-    params.set('action', 'traiterDemande');
-    // Reconstruit l'URL avec les nouveaux paramètres
-    url.search = params.toString();
-    // Redirige vers la nouvelle URL
-    window.location.href = url.toString();
-});
+if ( document.querySelector('.traiterDemande') != null ){
+    document.querySelector('.traiterDemande').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche la navigation immédiate
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        // Remplace ou ajoute 'action=login'
+        params.set('action', 'traiterDemande');
+        // Reconstruit l'URL avec les nouveaux paramètres
+        url.search = params.toString();
+        // Redirige vers la nouvelle URL
+        window.location.href = url.toString();
+    });
+}
 
-document.querySelector('.accueil').addEventListener('click', function(event) {
-    event.preventDefault(); // Empêche la navigation immédiate
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    // Remplace ou ajoute 'action=login'
-    params.set('action', 'accueil');
-    // Reconstruit l'URL avec les nouveaux paramètres
-    url.search = params.toString();
-    // Redirige vers la nouvelle URL
-    window.location.href = url.toString();
-});
+if ( document.querySelector('.accueil') != null ){
+    document.querySelector('.accueil').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche la navigation immédiate
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        // Remplace ou ajoute 'action=login'
+        params.set('action', 'accueil');
+        // Reconstruit l'URL avec les nouveaux paramètres
+        url.search = params.toString();
+        // Redirige vers la nouvelle URL
+        window.location.href = url.toString();
+    });
+}
 
-document.querySelector('.suivi').addEventListener('click', function(event) {
-    event.preventDefault(); // Empêche la navigation immédiate
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    // Remplace ou ajoute 'action=login'
-    params.set('action', 'suivi');
-    // Reconstruit l'URL avec les nouveaux paramètres
-    url.search = params.toString();
-    // Redirige vers la nouvelle URL
-    window.location.href = url.toString();
-});
 
-document.querySelector('.demande').addEventListener('click', function(event) {
-    event.preventDefault(); // Empêche la navigation immédiate
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    // Remplace ou ajoute 'action=login'
-    params.set('action', 'demande');
-    // Reconstruit l'URL avec les nouveaux paramètres
-    url.search = params.toString();
-    // Redirige vers la nouvelle URL
-    window.location.href = url.toString();
-});
+if ( document.querySelector('.suivi') != null ){
+    document.querySelector('.suivi').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche la navigation immédiate
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        // Remplace ou ajoute 'action=login'
+        params.set('action', 'suivi');
+        // Reconstruit l'URL avec les nouveaux paramètres
+        url.search = params.toString();
+        // Redirige vers la nouvelle URL
+        window.location.href = url.toString();
+    });
+}
+
+if ( document.querySelector('.demande') != null ){
+    document.querySelector('.demande').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche la navigation immédiate
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        // Remplace ou ajoute 'action=login'
+        params.set('action', 'demande');
+        // Reconstruit l'URL avec les nouveaux paramètres
+        url.search = params.toString();
+        // Redirige vers la nouvelle URL
+        window.location.href = url.toString();
+    });
+}
+
+if ( document.querySelector('.dashboard') != null ){
+    document.querySelector('.dashboard').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche la navigation immédiate
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        // Remplace ou ajoute 'action=login'
+        params.set('action', 'dashboard');
+        // Reconstruit l'URL avec les nouveaux paramètres
+        url.search = params.toString();
+        // Redirige vers la nouvelle URL
+        window.location.href = url.toString();
+    });
+}
 
 const deconnexion_items = document.querySelectorAll('.deconnexion');
 if ( deconnexion_items.length > 0 ){

@@ -9,6 +9,7 @@ function listDemandeAttenteValidation (){
         demande_acte.statut,
         demande_acte.nom,
         demande_acte.prenom,
+        demande_acte.email,
         DATE_FORMAT(demande_acte.date_naissance, '%d/%m/%Y %H:%i:%s') AS date_naissance,
         demande_acte.lieu_naissance,
         DATE_FORMAT(demande_acte.marie_le, '%d/%m/%Y %H:%i:%s') AS marie_le,
@@ -36,6 +37,7 @@ function demandeAttenteValidation ($id){
         demande_acte.statut,
         demande_acte.nom,
         demande_acte.prenom,
+        demande_acte.email,
         CASE 
             WHEN demande_acte.date_naissance IS NOT NULL 
             THEN DATE_FORMAT(demande_acte.date_naissance, '%d/%m/%Y') 
@@ -81,22 +83,24 @@ function demandeAttenteValidation ($id){
 
 }
 
-function validerDemande($id){
+function validerDemande($id, $id_agent=null){
 
-    $sql = "update demande_acte set statut = 'En attente de paiement' where id_demande = :id_demande";
+    $sql = "update demande_acte set statut = 'En attente de paiement', id_agent=:id_agent where id_demande = :id_demande";
 
     $stmt = Database::getConnection()->prepare($sql);
     $stmt->bindParam(':id_demande', $id);
+    $stmt->bindParam(':id_agent', $id_agent);
     $stmt->execute();
     return $stmt->fetch();
 }
 
-function annulerDemande($id){
+function annulerDemande($id, $id_agent=null){
 
-    $sql = "update demande_acte set statut = 'Rejeter' where id_demande = :id_demande";
+    $sql = "update demande_acte set statut = 'Rejeter', id_agent=:id_agent where id_demande = :id_demande";
 
     $stmt = Database::getConnection()->prepare($sql);
     $stmt->bindParam(':id_demande', $id);
+    $stmt->bindParam(':id_agent', $id_agent);
     $stmt->execute();
     return $stmt->fetch();
 }
@@ -121,6 +125,7 @@ function listCertificatAttenteValidation (){
         demande_acte.statut,
         demande_acte.nom,
         demande_acte.prenom,
+        demande_acte.email,
         DATE_FORMAT(demande_acte.date_naissance, '%d/%m/%Y %H:%i:%s') AS date_naissance,
         demande_acte.lieu_naissance,
         DATE_FORMAT(demande_acte.marie_le, '%d/%m/%Y %H:%i:%s') AS marie_le,
@@ -148,6 +153,7 @@ function certificatAttenteValidation ($id){
         demande_acte.statut,
         demande_acte.nom,
         demande_acte.prenom,
+        demande_acte.email,
         CASE 
             WHEN demande_acte.date_naissance IS NOT NULL 
             THEN DATE_FORMAT(demande_acte.date_naissance, '%d/%m/%Y') 
@@ -192,7 +198,8 @@ function certificatAttenteValidation ($id){
             THEN DATE_FORMAT(demande_acte.date_naissance_mere, '%d/%m/%Y') 
             ELSE NULL 
         END AS date_naissance_mere,
-        demande_acte.lieu_naissance_mere as lieu_naissance_mere
+        demande_acte.lieu_naissance_mere as lieu_naissance_mere,
+        demande_acte.piece_jointe as piece_jointe
         from demande_acte 
         where demande_acte.id_type_acte = 2
         AND demande_acte.id_demande = :id_demande   ";
@@ -213,6 +220,7 @@ function listActeNaissanceAttenteValidation (){
         demande_acte.statut,
         demande_acte.nom,
         demande_acte.prenom,
+        demande_acte.email,
         DATE_FORMAT(demande_acte.date_naissance, '%d/%m/%Y %H:%i:%s') AS date_naissance,
         demande_acte.lieu_naissance,
         DATE_FORMAT(demande_acte.marie_le, '%d/%m/%Y %H:%i:%s') AS marie_le,
@@ -242,6 +250,7 @@ function acteNaissanceenteValidation ($id){
         demande_acte.statut,
         demande_acte.nom,
         demande_acte.prenom,
+        demande_acte.email,
         CASE 
             WHEN demande_acte.date_naissance IS NOT NULL 
             THEN DATE_FORMAT(demande_acte.date_naissance, '%d/%m/%Y') 
@@ -439,6 +448,45 @@ function changerStatus($id, $status){
     $stmt->bindParam(':id_demande', $id);
     $stmt->bindParam(':statut', $status);
     return $stmt->execute(); // pas de fetch
+}
+
+
+
+function countByTypeActe() {
+    $conn = Database::getConnection();
+
+    $sql = "select 
+        type_.libele as name,
+        count( demande_acte.id_demande ) as y
+    from (
+        select distinct type_acte.libele, type_acte.id_type_acte from type_acte
+    ) as type_
+    left join demande_acte on ( demande_acte.id_type_acte = type_.id_type_acte )
+    group by type_.libele ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function countByTypeActeAvecUtilisateur($utilisateur) {
+    $conn = Database::getConnection();
+
+    $sql = "select 
+        type_.libele as name,
+        count( demande_acte.id_demande ) as y
+    from (
+        select distinct type_acte.libele, type_acte.id_type_acte from type_acte
+    ) as type_
+    left join demande_acte on ( demande_acte.id_type_acte = type_.id_type_acte and demande_acte.id_agent = :id_agent )
+    group by type_.libele ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':id_agent', $utilisateur);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 ?>

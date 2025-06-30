@@ -2,6 +2,7 @@
 <?php 
 session_start();
 require_once 'models/DemandeActe.php';
+require_once 'utils/sendMail.php';
 
 function redirectAfterDeleteParam ($param){
      // Supprimer 'valider' du tableau $_GET
@@ -17,16 +18,49 @@ function redirectAfterDeleteParam ($param){
     exit;
 }
 
+function redirectAfterDeleteParams ($paramettre){
+     // Supprimer 'valider' du tableau $_GET
+    $params = $_GET;
+    foreach($paramettre as $param){
+        unset($params[$param]);
+    }
+
+    // Reconstruire l'URL avec les autres paramètres
+    $query = http_build_query($params);
+    $url = strtok($_SERVER["REQUEST_URI"], '?');
+    $newUrl = $url . ($query ? "?$query" : "");
+
+    header("Location: $newUrl");
+    exit;
+}
+
 if ( isset($_GET['valider'])  ){
-    validerDemande($_GET['valider']);
+    validerDemande($_GET['valider'], $_SESSION["id"]);
+
+    $subjet = "Validation d'acte de naissance";
+    $message = "Bonjour votre demande de certificat de nationnalité a été validé.";
+    sendMessage($_GET["email"], $message, $subjet);
+
+    $toDelete = [];
+    $toDelete[] = "valider";
+    $toDelete[] = "email";
+    redirectAfterDeleteParams($toDelete);
     
-    redirectAfterDeleteParam('valider');
+    // redirectAfterDeleteParam('valider');
 }
 if ( isset($_GET['annuler'])  ){
-    annulerDemande($_GET['annuler']);
+    annulerDemande($_GET['annuler'], $_SESSION["id"]);
 
+    $subjet = "Rejet d'acte de naissance";
+    $message = "Bonjour votre demande de certificat de nationnalité a été réjeté.";
+    sendMessage($_GET["email"], $message, $subjet);
 
-    redirectAfterDeleteParam('annuler');
+    $toDelete = [];
+    $toDelete[] = "annuler";
+    $toDelete[] = "email";
+    redirectAfterDeleteParams($toDelete);
+
+    // redirectAfterDeleteParam('annuler');
 }
 
 ?>
@@ -76,7 +110,7 @@ require_once 'views/menu.php';
                 <div id="users" class="fw-bold menu-principal col-12 menu-item ">
                     <span id="users-toggle-icon" class="icon">−</span> Gestion des utilisateurs
                 </div>
-                <a href="#" id="users-menu-utilisateur" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover">Utilisateurs</a>
+                <a href="#" id="users-menu-utilisateur" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover utilisateur">Utilisateurs</a>
                 <a href="#" id="users-menu-role" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover">Roles</a>
                 <a href="#" id="users-menu-actions" class="col-11 offset-1 text-dark menu-item annuler-text-decoration annuler-heritage-color-hover">Actions</a>
             </div>
@@ -186,11 +220,11 @@ if ( isset($_GET['id']) ) {
             <span type="button" class="btn btn-secondary ferme-modal " >Close</span>
 
             <?php if ($info_demande['statut'] == 'En attente de validation' ) { ?>
-            <span type="button" id="btn-annulation" <?php if ( isset($_GET["id"]) ){ echo "data-id=\"".$_GET["id"]."\""; } ?> class="btn btn-danger ">Rejeter</span>
+            <span type="button" id="btn-annulation" <?php if ( isset($_GET["id"]) ){ echo "data-id=\"".$_GET["id"]."|".$info_demande["email"]. "\""; } ?> class="btn btn-danger ">Rejeter</span>
             <?php } ?>
 
             <?php if ($info_demande['statut'] == 'Rejeter' || $info_demande['statut'] == 'En attente de validation' ) { ?>
-            <span type="button" id="btn-validation" <?php if ( isset($_GET["id"]) ){ echo "data-id=\"".$_GET["id"]."\""; } ?> class="btn btn-primary ">Accepter</span>
+            <span type="button" id="btn-validation" <?php if ( isset($_GET["id"]) ){ echo "data-id=\"".$_GET["id"]."|".$info_demande["email"]. "\""; } ?> class="btn btn-primary ">Accepter</span>
             <?php } ?>
         </div>
         
@@ -345,6 +379,16 @@ if ( $detail == false ){
             window.location.href = url.toString();
         });
 
+        document.querySelector('.utilisateur').addEventListener('click', function(event) {
+            event.preventDefault(); // Empêche la navigation immédiate
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            params.set('action', 'utilisateur');
+            url.search = params.toString();
+            window.location.href = url.toString();
+        });
+
+
         Array.from( document.getElementsByClassName('one-acte-naissance') ).forEach (element => {
             element.addEventListener('click', function(event) {
                 const id = this.getAttribute('data-id'); // récupère l'id dynamique
@@ -371,11 +415,13 @@ if ( $detail == false ){
         const buttonValidation = document.getElementById('btn-validation');
         if ( buttonValidation != null ){
             buttonValidation.addEventListener('click', function(event) {
-                const valider = this.getAttribute('data-id'); // récupère l'id dynamique
+                const valider = this.getAttribute('data-id').split("|")[0];
+                const email = this.getAttribute('data-id').split("|")[1];
                 const url = supprimerParam("id");
 
                 const params = new URLSearchParams(url.search);
-                params.set('valider', valider); // définit le nouveau paramètre 'id'
+                params.set('valider', valider); 
+                params.set('email', email); 
                 url.search = params.toString();
                 window.location.href = url.toString(); // recharge la page 
             });
@@ -384,11 +430,13 @@ if ( $detail == false ){
         const buttonAnnulation = document.getElementById('btn-annulation');
         if ( buttonAnnulation != null ){
             buttonAnnulation.addEventListener('click', function(event) {
-                const annuler = this.getAttribute('data-id'); // récupère l'id dynamique
+                const annuler = this.getAttribute('data-id').split("|")[0]; 
+                const email = this.getAttribute('data-id').split("|")[1];
                 const url = supprimerParam("id");
 
                 const params = new URLSearchParams(url.search);
-                params.set('annuler', annuler); // définit le nouveau paramètre 'id'
+                params.set('annuler', annuler);
+                params.set('email', email);
                 url.search = params.toString();
                 window.location.href = url.toString(); // recharge la page 
             });
