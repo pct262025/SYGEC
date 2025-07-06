@@ -23,6 +23,13 @@ $listDossierForSuivi = listDossierForSuivi($_SESSION["id"]);
 //     }
 //     return "";
 // }
+// Paramètres de pagination
+$parPage = 5;
+$total = count($listDossierForSuivi);
+$pageCourante = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$debut = ($pageCourante - 1) * $parPage;
+$dossiersPage = array_slice($listDossierForSuivi, $debut, $parPage);
+$nbPages = ceil($total / $parPage);
 
 function getAction($status, $dossierId, $typeActe, $montant){
     if ($status == "En attente de paiement") {
@@ -30,10 +37,16 @@ function getAction($status, $dossierId, $typeActe, $montant){
                   Faire le paiement
                 </a>";
     }
+
     if ($status == "Payé") {
         if ($typeActe == "Acte de naissance") {
             return '<a href="index.php?action=telechargerCertificatNaissance&id_demande='.$dossierId.'" 
                       class="btn btn-success" title="Télécharger Certificat de Naissance">
+                      <i class="fas fa-download"></i> Télécharger
+                    </a>';
+        } elseif ($typeActe == "Acte de mariage") {
+            return '<a href="index.php?action=telechargerActeMariage&id_demande='.$dossierId.'" 
+                      class="btn btn-success" title="Télécharger Acte de Mariage">
                       <i class="fas fa-download"></i> Télécharger
                     </a>';
         } else {
@@ -43,8 +56,10 @@ function getAction($status, $dossierId, $typeActe, $montant){
                     </a>';
         }
     }
+
     return "";
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -98,7 +113,7 @@ require_once 'views/menu.php';
 
             <a href="">
                 <div class="card">
-                    <div class="title">Nbre de certificat de nationalité déclaré</div>
+                    <div class="title">Nombre de certificat de nationalité déclaré</div>
                     <h1> <?php echo nbrDossier($_SESSION["id"], 2); ?> </h1>
                     <i class="fas fa-arrow-right arrow"></i>
                 </div>
@@ -106,7 +121,7 @@ require_once 'views/menu.php';
 
             <a href="">
                 <div class="card">
-                    <div class="title">Demande de certificat de décés</div>
+                    <div class="title">Nombre d'acte de mariage déclaré</div>
                     <h1> <?php echo nbrDossier($_SESSION["id"], 3); ?> </h1>
                     <i class="fas fa-arrow-right arrow"></i>
                 </div>
@@ -129,11 +144,19 @@ if ( empty($listDossierForSuivi) ){
 }else {
 
 ?>
-        <div class="containers  mt-5 ">       
-            
-            <table id="suivie-table" class="table border border-ligh mt-5 mb-5 " style="border-radius: 15px; overflow: hidden; " >
-                <thead class=" text-white">
-                    <tr class="bg-success ">
+            <!--  BARRE DE RECHERCHE -->
+                   <div class="container mt-4">
+                       <div class="row justify-content-center">
+                          <div class="col-md-6">
+                            <input type="text" id="searchInput" class="form-control" placeholder="🔍 Rechercher...">
+                         </div>
+                        </div>
+                 </div>
+
+                 <div class="container mt-4">
+        <table id="suivie-table" class="table table-bordered table-hover">
+            <thead class="table-success text-white">
+                    <tr>
                         <th class="col"> <span class="btn text-white">Date de déclaration</span> </th>
                         <th class="col"> <span class="btn text-white">Type d’acte</span> </th>
                         <th class="col"> <span class="btn text-white">Montant</span> </th>
@@ -170,7 +193,28 @@ if ( empty($listDossierForSuivi) ){
                 </tbody>
             </table>
         </div>
-
+          <!-- ✅ PAGINATION -->
+    <div class="text-center mb-5">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <?php if ($pageCourante > 1): ?>
+                    <li class="page-item">
+                        <a class="page-link" href="?action=suivi&page=<?= $pageCourante - 1; ?>">Précédent</a>
+                    </li>
+                <?php endif; ?>
+                <?php for ($i = 1; $i <= $nbPages; $i++): ?>
+                    <li class="page-item <?= $i == $pageCourante ? 'active' : ''; ?>">
+                        <a class="page-link" href="?action=suivi&page=<?= $i; ?>"><?= $i; ?></a>
+                    </li>
+                <?php endfor; ?>
+                <?php if ($pageCourante < $nbPages): ?>
+                    <li class="page-item">
+                        <a class="page-link" href="?action=suivi&page=<?= $pageCourante + 1; ?>">Suivant</a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </div>
 
 
 <?php 
@@ -204,6 +248,16 @@ require_once "views/footer.php";
             window.location.href = url.toString();
         });
     });
+    // Filtrage du tableau avec la recherche
+document.getElementById('searchInput').addEventListener('keyup', function () {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#suivie-table tbody tr");
+
+    rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
 </script>
 
 </body>

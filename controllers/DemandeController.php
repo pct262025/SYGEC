@@ -321,5 +321,85 @@ class DemandeController {
         exit;
     }
 
+    // ACTE DE MARIAGE
+    public function telechargerActeMariage() {
+        session_start();
+    
+        if (!isset($_SESSION["id"])) {
+            header("Location: index.php?action=login");
+            exit;
+        }
+    
+        if (!isset($_GET['id_demande'])) {
+            echo "Aucune demande spécifiée.";
+            exit;
+        }
+    
+        $id_demande = intval($_GET['id_demande']);
+        require_once 'models/DemandeActe.php';
+        $dossier = getDossierMariageById($id_demande, $_SESSION["id"]);
+    
+        if (!$dossier) {
+            echo "Demande introuvable.";
+            exit;
+        }
+    
+        require_once 'libs/tcpdf/tcpdf.php';
+        $pdf = new TCPDF();
+        $pdf->SetPrintFooter(false);
+        $pdf->SetPrintHeader(false);
+    
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('AYMAR N\'SANIGNA');
+        $pdf->SetTitle('Acte de mariage');
+        $pdf->SetSubject('Mariage');
+        $pdf->SetMargins(20, 30, 20);
+    
+        $pdf->AddPage();
+        // Emblème en filigrane
+        $embleme = 'assets/img/logo.png';
+        $pdf->SetAlpha(0.1);
+        $pdf->Image($embleme, 50, 70, 100);
+        $pdf->SetAlpha(1);
+    
+        // 📌 Images en-tête
+        $pdf->Image('assets/img/logo.png', 20, 10, 30); // logo mairie
+        $pdf->Image('assets/img/embleme_ci1.png', 160, 10, 30); // emblème CI
+    
+        $pdf->Ln(15); // espace après les logos
+        
+    
+        // ✅ Contenu texte
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetFont('helvetica', 'B', 14);
+        $pdf->Cell(0, 10, 'EXTRAIT D\'ACTE DE MARIAGE', 0, 1, 'C');
+        $pdf->Ln(10);
+    
+        $pdf->SetFont('helvetica', '', 10);
+        $pdf->Cell(0, 10, 'N° Registre: ' . $dossier['numero_registre'], 0, 1);
+        $pdf->Cell(0, 10, 'Date de mariage: ' . $dossier['date_mariage'], 0, 1);
+        $pdf->Cell(0, 10, 'Lieu de mariage: ' . $dossier['lieu_mariage'], 0, 1);
+    
+        $pdf->Ln(5);
+        $pdf->Cell(0, 10, 'ÉPOUX:' . $dossier['nom'] .' '. $dossier['prenom'], 0, 1);
+        // $pdf->Cell(0, 10, $dossier['nom'] . ' ' . $dossier['prenom'], 0, 1);
+        $pdf->Cell(0, 10, 'Né(e) le: ' . $dossier['date_naissance'] . ' à ' . $dossier['lieu_naissance'], 0, 1);
+    
+        $pdf->Ln(5);
+        $pdf->Cell(0, 10, 'ÉPOUSE:'. $dossier['nom_conjoint']  .' '. $dossier['prenom_conjoint'], 0, 1);
+        // $pdf->Cell(0, 10, $dossier['nom_conjoint'] . ' ' . $dossier['prenom_conjoint'], 0, 1);
+        $pdf->Cell(0, 10, 'Née le: ' . $dossier['date_naissance_epouse'] . ' à ' . $dossier['lieu_naissance_conjoint'], 0, 1);
+    
+        $pdf->Ln(10);
+        $pdf->Cell(0, 10, 'Officier d\'état civil:  KOUAKOU NOBERT' . $dossier['officier_etat_civil'], 0, 1);
+    
+        $pdf->Ln(15);
+        $pdf->Cell(0, 10, 'Délivré à Yamoussoukro, le: ' . date('d/m/Y'), 0, 1, 'R');
+    
+        $pdf->Output('acte_mariage_'.$id_demande.'.pdf', 'D');
+        exit;
+    }
+    
+
 }
 ?>

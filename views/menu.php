@@ -15,7 +15,7 @@ $admin = isset( $_SESSION['id_role'] ) ? true : false;
         <ul>
             <?php if ( $admin ) { ?>
                 <li><a class="dashboard" href="#">Dashboard</a></li>
-                <li><a href="#">Contacts</a></li>
+                <li><a href="#" class="contact">Contacts</a></li>
                 <li><a class="traiterDemande" href="#?action=traiterDemande">Administration</a></li>
             <?php } ?>
 
@@ -24,7 +24,7 @@ $admin = isset( $_SESSION['id_role'] ) ? true : false;
                 <li><a class="accueil" href="#?action=accueil">Acceuil</a></li>
                 <li><a href="#" class="demande">Demande d'Actes</a></li>
                 <li><a href="#" class="suivi">Suivi</a></li>
-                <li><a href="#">Contacts</a></li>
+                <li><a href="#" class="contact">Contacts</a></li>
             <?php } ?>
             
         </ul>
@@ -212,6 +212,21 @@ if ( deconnexion_items.length > 0 ){
             // Redirige vers la nouvelle URL
             window.location.href = url.toString();
         });
+    });
+}
+
+
+if ( document.querySelector('.contact') != null ){
+    document.querySelector('.contact').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche la navigation immédiate
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        // Remplace ou ajoute 'action=login'
+        params.set('action', 'contact');
+        // Reconstruit l'URL avec les nouveaux paramètres
+        url.search = params.toString();
+        // Redirige vers la nouvelle URL
+        window.location.href = url.toString();
     });
 }
 

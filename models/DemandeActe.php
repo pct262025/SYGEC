@@ -489,4 +489,23 @@ function countByTypeActeAvecUtilisateur($utilisateur) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function getDossierMariageById($id_demande, $id_citoyen) {
+    $conn = Database::getConnection();
+    $sql = "
+        SELECT 
+            da.*,
+            DATE_FORMAT(da.marie_le, '%d/%m/%Y') as date_mariage,
+            da.marie_a as lieu_mariage,
+            ta.libele
+        FROM demande_acte da
+        INNER JOIN type_acte ta ON ta.id_type_acte = da.id_type_acte
+        WHERE da.id_demande = :id AND da.id_citoyen = :id_citoyen
+        AND da.id_type_acte = 3
+    ";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['id' => $id_demande, 'id_citoyen' => $id_citoyen]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 ?>

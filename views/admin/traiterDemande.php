@@ -253,8 +253,15 @@ if ( $detail == false ){
 <?php
     }else{
     
-?>
-
+?>     
+    <!-- BARRE DE RECHERCHE -->
+      <div class="mb-3 mt-4 d-flex justify-content-center">
+  <div style="width: 700px;">
+    <label for="searchStatut" class="form-label text-center w-100">Recherche par statut :</label>
+    <input type="text" id="searchStatut" class="form-control" placeholder="Tapez un statut...">
+  </div>
+</div>
+<!-- FIN DE RECHERCHE  -->
                     <table class="table mt-5">
                         <thead class="table-success">
                             <tr>
@@ -273,7 +280,7 @@ if ( $detail == false ){
                                 <td class="col-2"> <?php echo $demande_acte['id_demande'] != null ? $demande_acte['id_demande'] : '---Néant---'; ?> </th>
                                 <td class="col"> <?php echo $demande_acte['nom'] != null ? $demande_acte['nom'] : '---Néant---'; ?> </td>
                                 <td class="col"> <?php echo $demande_acte['prenom'] != null ? $demande_acte['prenom'] : '---Néant---'; ?> </td>
-                                <td class="col"> <?php echo $demande_acte['statut'] != null ? $demande_acte['statut'] : '---Néant---'; ?> </td>
+                                <td class="col statut-cell"> <?php echo $demande_acte['statut'] != null ? $demande_acte['statut'] : '---Néant---'; ?> </td>
                                 <td class="col-1 justify-content-center "> 
                                     <div class="d-flex justify-content-center">
                                         <a class="one-acte-naissance" href="#" data-id="<?php echo $demande_acte['id_demande']; ?>">
@@ -489,6 +496,25 @@ if ( $detail == false ){
         
 
     </script>
+    <!-- SCRIPT POUR LA BARRE DE RECHERCHE -->
+    <script>
+    document.getElementById('searchStatut').addEventListener('keyup', function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('table tbody tr');
+
+        rows.forEach(function (row) {
+            let statutCell = row.querySelector('.statut-cell');
+            let statut = statutCell ? statutCell.textContent.toLowerCase() : '';
+
+            if (statut.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+
 
 </body>
 </html>

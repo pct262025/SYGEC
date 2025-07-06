@@ -1,0 +1,112 @@
+/* .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+} */
+
+/* contact.css */
+
+/* Main Content Désirée */
+.main-content {
+    padding: 40px 0;
+
+
+
+    .page-title {
+        text-align: center;
+        color: #333;
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        font-weight: 700; /* Bolder for titles */
+    }
+
+    .intro-text {
+        text-align: center;
+        color: #666;
+        font-size: 1.1em;
+        max-width: 800px;
+        margin: 0 auto 40px auto;
+    }
+
+    .contact-section {
+        display: flex;
+        justify-content: center; /* Center the cards if they don't fill the width */
+        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        gap: 30px; /* Space between the cards */
+    }
+
+    .card {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        padding: 30px;
+        flex: 1; /* Allow cards to grow */
+        min-width: 300px; /* Minimum width before wrapping */
+        max-width: 500px; /* Max width for individual cards */
+    }
+
+    .contact-form .form-group {
+        margin-bottom: 20px;
+    }
+
+    .contact-form label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .contact-form input[type="text"],
+    .contact-form input[type="email"],
+    .contact-form select,
+    .contact-form textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        transition: border-color 0.3s ease;
+    }
+
+    .contact-form input[type="text"]:focus,
+    .contact-form input[type="email"]:focus,
+    .contact-form select:focus,
+    .contact-form textarea:focus {
+        border-color: #28a745; /* Highlight on focus */
+        outline: none;
+    }
+
+    .contact-form textarea {
+        resize: vertical; /* Allow vertical resizing of textarea */
+    }
+
+    .form-submit-btn {
+        width: 100%;
+        padding: 15px;
+        font-size: 1.1em;
+        font-weight: 700;
+        margin-top: 10px;
+    }
+
+    .contact-info-card h2 {
+        color: #333;
+        font-size: 1.6em;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+
+    .contact-info-card p {
+        margin-bottom: 10px;
+        color: #555;
+    }
+
+    .contact-info-card h3 {
+        color: #333;
+        font-size: 1.3em;
+        margin-top: 30px;
+        margin-bottom: 10px;
+    }
+}
+

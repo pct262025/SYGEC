@@ -270,7 +270,14 @@ if ( $detail == false ){
     else{
     
 ?>
-
+              <!-- BARRE DE RECHERCHE -->
+                     <div class="mb-3 mt-4 d-flex justify-content-center">
+                          <div style="width: 700px;">
+                               <label for="searchStatut" class="form-label text-center w-100">Recherche par statut :</label>
+                              <input type="text" id="searchStatut" class="form-control" placeholder="Tapez un statut...">
+                            </div>
+                       </div>
+              <!-- FIN DE RECHERCHE  -->
                     <table class="table mt-5">
                         <thead class="table-success">
                             <tr>
@@ -289,7 +296,7 @@ if ( $detail == false ){
                                 <td class="col-2"> <?php echo $certificat['id_demande'] != null ? $certificat['id_demande'] : '---Néant---'; ?> </th>
                                 <td class="col"> <?php echo $certificat['nom'] != null ? $certificat['nom'] : '---Néant---'; ?> </td>
                                 <td class="col"> <?php echo $certificat['prenom'] != null ? $certificat['prenom'] : '---Néant---'; ?> </td>
-                                <td class="col"> <?php echo $certificat['statut'] != null ? $certificat['statut'] : '---Néant---'; ?> </td>
+                                <td class="col statut-cell"> <?php echo $certificat['statut'] != null ? $certificat['statut'] : '---Néant---'; ?> </td>
                                 <td class="col-1 justify-content-center "> 
                                     <div class="d-flex justify-content-center">
                                         <a class="one-certificat" href="#" data-id="<?php echo $certificat['id_demande']; ?>">
@@ -488,6 +495,24 @@ if ( $detail == false ){
         
 
     </script>
+     <!-- SCRIPT POUR LA BARRE DE RECHERCHE -->
+     <script>
+    document.getElementById('searchStatut').addEventListener('keyup', function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('table tbody tr');
+
+        rows.forEach(function (row) {
+            let statutCell = row.querySelector('.statut-cell');
+            let statut = statutCell ? statutCell.textContent.toLowerCase() : '';
+
+            if (statut.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

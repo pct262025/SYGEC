@@ -69,13 +69,19 @@ switch ($action) {
         break;
 
     
-    case 'telechargerCertificatNaissance':
+    // Ajout de la route pour télécharger le PDF
+    case 'telechargerPDF':
         require_once('controllers/DemandeController.php');
         $controller = new DemandeController();
-        $controller->telechargerPDF(); // avant c’était telechargerCertificatNaissance()
+        $controller->telechargerCertificatNaissance(); // avant c’était telechargerPDF()
         break;
+        case 'telechargerActeMariage':
+            require_once('controllers/DemandeController.php');
+            $controller = new DemandeController();
+            $controller->telechargerActeMariage();
+            break;        
     
-    case 'acte-mariage':
+    case 'telechargerCertificatNaissance':
         require_once('controllers/DemandeController.php');
         $controller = new DemandeController();
         $controller->telechargerPDF(); // avant c’était telechargerCertificatNaissance()
@@ -103,6 +109,12 @@ switch ($action) {
         require_once('controllers/AdminController.php');
         $controller = new AdminController();
         $controller->role();
+        break;
+    
+    case 'contact':
+        require_once('controllers/ContactController.php');
+        $controller = new ContactController();
+        $controller->contact();
         break;
 
 }

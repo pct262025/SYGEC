@@ -1,7 +1,7 @@
 <?php 
 
 class Dashboard{
-    function dashboard(){
+    function __construct(){
         require_once 'views/dashboard.php';
     }
 }

@@ -266,7 +266,8 @@ function genererQrCode(){
     qrContainer.innerHTML = "";
 
     new QRCode(qrContainer, {
-        text: `http://192.168.1.25/sygec/?action=payement-par-qrcode&id_demande=${id_demande}&montant=${montant}&operateur=${operateur}`,
+        text: `http://192.168.1.9/sygec/?action=payement-par-qrcode&id_demande=${id_demande}&montant=${montant}&operateur=${operateur}`,
+        // text: `http://192.168.1.25/sygec/?action=payement-par-qrcode&id_demande=${id_demande}&montant=${montant}&operateur=${operateur}`,
         // text: `http://192.168.1.7/sygec/?action=payement-par-qrcode&id_demande=${id_demande}&montant=${montant}&operateur=${operateur}`,
         // text: `http://192.168.1.7/sygec/`,
         width: 128,
